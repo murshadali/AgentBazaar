@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bot, ShieldCheck, Zap, Handshake, CheckCircle2, ArrowRight, Lock, Star, Clock, UserCheck } from 'lucide-react';
+import { Bot, ShieldCheck, Zap, Handshake, CheckCircle2, ArrowRight, Lock, Star, Clock, UserCheck, Activity, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const HowItWorksPage = () => {
@@ -7,22 +7,22 @@ export const HowItWorksPage = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-left space-y-12">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3">
           <Bot className="w-3.5 h-3.5" />
-          <span>Protocol Architecture & Security Principles</span>
+          <span>Protocol Architecture & Game-Theoretic Foundations</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
           How AgentBazaar Autonomous Negotiation Works
         </h1>
         <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-          AgentBazaar replaces uncomfortable price haggle with two autonomous AI agents operating under strict mathematical constraints, privacy isolation, and mandatory dual human approval.
+          AgentBazaar replaces uncomfortable price haggle with two autonomous AI agents operating under Axelrod's Reciprocal Tit-for-Tat bargaining theory, strict privacy isolation, and mandatory dual human approval.
         </p>
       </div>
 
       {/* 4 Step Workflow */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs relative">
-          <span className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-sm mb-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
+          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
             1
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Seller Configures Agent</h3>
@@ -31,8 +31,8 @@ export const HowItWorksPage = () => {
           </p>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs relative">
-          <span className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-sm mb-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
+          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
             2
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Buyer Deploys Agent</h3>
@@ -41,18 +41,18 @@ export const HowItWorksPage = () => {
           </p>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs relative">
-          <span className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-sm mb-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
+          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
             3
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Autonomous Haggle</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Buyer Agent makes the first offer. The agents exchange counter-offers round-by-round via Gemini and mathematical concession curves.
+            Buyer Agent makes the opening offer. Agents exchange counter-offers round-by-round via Gemini and reciprocal concession matching.
           </p>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs relative">
-          <span className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-sm mb-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
+          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
             4
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Dual Human Approval</h3>
@@ -65,8 +65,8 @@ export const HowItWorksPage = () => {
       {/* Architectural Deep-Dive Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
         {/* Card 1: Confidential Boundaries */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-7 shadow-xs space-y-4">
-          <div className="flex items-center gap-2.5 text-indigo-600">
+        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm space-y-4">
+          <div className="flex items-center gap-2.5 text-blue-600">
             <Lock className="w-5 h-5" />
             <h3 className="text-base font-bold text-slate-900">Confidential Price Privacy (NFR1)</h3>
           </div>
@@ -90,7 +90,7 @@ export const HowItWorksPage = () => {
         </div>
 
         {/* Card 2: Programmatic Guardrail Service */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-7 shadow-xs space-y-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5 text-amber-600">
             <ShieldCheck className="w-5 h-5" />
             <h3 className="text-base font-bold text-slate-900">Programmatic Guardrails (NFR2)</h3>
@@ -114,22 +114,33 @@ export const HowItWorksPage = () => {
           </ul>
         </div>
 
-        {/* Card 3: ZOPA / Feasibility */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-7 shadow-xs space-y-4">
+        {/* Card 3: Real-World Axelrod Reciprocal Model */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5 text-blue-600">
-            <Zap className="w-5 h-5" />
-            <h3 className="text-base font-bold text-slate-900">Zone of Possible Agreement (ZOPA)</h3>
+            <Activity className="w-5 h-5" />
+            <h3 className="text-base font-bold text-slate-900">Real-World Axelrod Tit-for-Tat Model</h3>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
-            An agreement interval [SellerFloor, BuyerCeiling] exists only if <strong>BuyerBudgetCeiling ≥ SellerFloorPrice</strong>.
+            Replaces arbitrary math curves with authentic human bargaining psychology:
           </p>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            If no overlap is possible (e.g. buyer budget is ₹15,000 but seller floor is ₹18,000), the agents will alternate strategically without violating either limit, concluding with an impasse rather than an invalid deal.
-          </p>
+          <ul className="text-xs space-y-2 text-slate-700">
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <span><strong>Concession Reciprocity:</strong> When an opponent drops their price, our agent reciprocates with a proportional raise.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <span><strong>Stubbornness Defense:</strong> If an opponent concedes ₹0, our agent holds ground to prevent one-sided exploitation.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <span><strong>Semantic Anchoring:</strong> Offers are justified by item condition (New, Like New, Good, Fair, Used).</span>
+            </li>
+          </ul>
         </div>
 
         {/* Card 4: In-Person Exchange & Reputation */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-7 shadow-xs space-y-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5 text-emerald-600">
             <Handshake className="w-5 h-5" />
             <h3 className="text-base font-bold text-slate-900">Local Handover & Reputation Engine</h3>
@@ -151,14 +162,14 @@ export const HowItWorksPage = () => {
       </div>
 
       {/* CTA Bottom Banner */}
-      <div className="bg-indigo-50 border border-indigo-200 rounded-3xl p-8 text-center space-y-4">
-        <h3 className="text-xl font-bold text-indigo-950">Ready to Experience Autonomous Haggling?</h3>
-        <p className="text-xs text-indigo-800 max-w-md mx-auto">
+      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 text-center space-y-4">
+        <h3 className="text-xl font-bold text-blue-950">Ready to Experience Autonomous Haggling?</h3>
+        <p className="text-xs text-blue-800 max-w-md mx-auto">
           Explore our verified listings and configure your own AI buyer agent right now.
         </p>
         <Link
           to="/marketplace"
-          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-2xl text-xs shadow-xs transition-colors"
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl text-xs shadow-sm transition-colors"
         >
           <span>Explore Marketplace Listings</span>
           <ArrowRight className="w-4 h-4" />
@@ -167,3 +178,5 @@ export const HowItWorksPage = () => {
     </div>
   );
 };
+
+export default HowItWorksPage;
