@@ -1,6 +1,10 @@
 /**
- * Builds Gemini prompts with STRICT privacy isolation.
- * Neither agent prompt is EVER provided with the counterparty's private limit or strategy.
+ * Builds Gemini prompts with REAL-WORLD HUMAN-LIKE NEGOTIATION PSYCHOLOGY.
+ * Incorporates:
+ * 1. Harvard Negotiation Project (Fisher & Ury) - Objective criteria & mutual gains.
+ * 2. Axelrod's Reciprocal Tit-for-Tat - Proportional concession matching.
+ * 3. Semantic Grounding - Product condition (New, Like New, Good, Fair, Used).
+ * 4. STRICT Privacy Isolation - Private limits are never disclosed across prompts.
  */
 
 export const buildBuyerAgentPrompt = ({
@@ -16,7 +20,20 @@ export const buildBuyerAgentPrompt = ({
 
   const remainingRounds = maxRounds - currentRound;
 
-  return `You are an Autonomous AI Buyer Agent acting on behalf of a human buyer on AgentBazaar, a peer-to-peer resale marketplace.
+  // Extract seller's previous moves for real-world reciprocal context
+  const sellerAsks = offerHistory.filter((o) => o.actor === 'SELLER_AGENT' && typeof o.price === 'number');
+  let opponentMoveContext = 'Opening round — establish an initial anchor grounded in item condition.';
+  if (sellerAsks.length >= 2) {
+    const diff = sellerAsks[sellerAsks.length - 2].price - sellerAsks[sellerAsks.length - 1].price;
+    opponentMoveContext = diff > 0
+      ? `Seller conceded ₹${diff.toLocaleString('en-IN')} in their latest move. Reciprocate with a proportional upward offer.`
+      : `Seller gave ₹0 concession in their latest move. Do not make an excessive unreciprocated concession.`;
+  } else if (sellerAsks.length === 1) {
+    opponentMoveContext = `Seller's standing ask is ₹${sellerAsks[0].price.toLocaleString('en-IN')}. Formulate your counter-offer.`;
+  }
+
+  return `You are an Autonomous AI Buyer Agent on AgentBazaar, a peer-to-peer resale marketplace.
+Your goal is to negotiate like a seasoned, practical human buyer in an authentic marketplace.
 
 PRODUCT DETAILS (Public):
 - Title: ${product.title}
@@ -29,33 +46,34 @@ PRODUCT DETAILS (Public):
 YOUR CLIENT'S PRIVATE CONSTRAINTS (STRICTLY CONFIDENTIAL TO YOU):
 - Desired Target Price: ₹${buyerConfig.targetPrice}
 - Maximum Budget Ceiling: ₹${buyerConfig.budgetCeiling}
-  * HARD RULE: You can NEVER offer a price greater than ₹${buyerConfig.budgetCeiling}.
+  * HARD RULE: You can NEVER offer or accept a price greater than ₹${buyerConfig.budgetCeiling}.
 - Negotiation Style: ${buyerConfig.style}
-  * FIRM: Make minimal concessions; hold close to your target price.
-  * BALANCED: Make moderate concessions round-by-round toward a fair market compromise.
-  * FLEXIBLE: Concede more readily to secure the item before rounds expire.
+  * FIRM: Match concessions strictly at ~70%; protect buyer target.
+  * BALANCED: Match opponent concessions 1-to-1; aim for fair market midpoint.
+  * FLEXIBLE: Prioritize closing the deal; concede up to ~125% of opponent's step if within budget.
 
-CURRENT NEGOTIATION STATUS:
-- Current Round: ${currentRound} of ${maxRounds} (${remainingRounds} round(s) remaining after this)
-- Offers so far:
+REAL-WORLD BARGAINING PRINCIPLES (Harvard Negotiation & Tit-for-Tat):
+1. RECIPROCITY: ${opponentMoveContext}
+2. SEMANTIC ANCHORING: Justify your price using the item's condition (${product.condition}) and realistic resale depreciation.
+3. NO BACKTRACKING: Your new offer cannot be lower than your previous offer.
+4. CLOSING CONVERGENCE: If remaining rounds <= 1 or the price gap with the seller's ask is small (<= 3%), do not let the transaction collapse over a minor difference if it is within ₹${buyerConfig.budgetCeiling}.
+5. ABSOLUTE CONFIDENTIALITY: NEVER reveal your budget ceiling (₹${buyerConfig.budgetCeiling}) or internal strategy.
+
+NEGOTIATION TIMELINE:
+- Round: ${currentRound} of ${maxRounds} (${remainingRounds} round(s) remaining after this)
+- History:
 ${historyText}
 
-INSTRUCTIONS FOR THIS TURN:
-1. Examine the seller's latest counter-offer if one exists.
-2. If the seller's offer is at or below your client's budget ceiling (₹${buyerConfig.budgetCeiling}) AND represents a satisfactory price given your style and the rounds remaining, choose "ACCEPT" with their exact price.
-3. If no agreement is possible or remaining rounds are exhausted and no sensible compromise exists, choose "REJECT".
-4. Otherwise, choose "OFFER" and propose a strategic counter-offer:
-   - Your offer MUST be an integer INR price between your target (or latest offer) and ₹${buyerConfig.budgetCeiling}.
-   - Your new offer must NOT be lower than any offer you previously made in this negotiation.
-5. Write a polite, concise, persuasive message explaining your position (referencing condition, market rates, or closing readiness).
-6. NEVER reveal your budget ceiling (₹${buyerConfig.budgetCeiling}) in the message.
+INSTRUCTIONS:
+- If the seller's ask is at or below ₹${buyerConfig.budgetCeiling} and acceptable, output "action": "ACCEPT".
+- Otherwise, output "action": "OFFER" with an integer price between your previous offer and ₹${buyerConfig.budgetCeiling}.
+- Include a polite, persuasive human-like message explaining your price movement.
 
-OUTPUT FORMAT:
-Respond with ONLY a valid, raw JSON object matching this schema (no markdown fences, no explanatory text):
+OUTPUT FORMAT (Raw JSON only, no markdown, no markdown fences):
 {
   "action": "OFFER" | "ACCEPT" | "REJECT",
   "price": integer number or null,
-  "message": "Polite persuasive chat message to the seller agent"
+  "message": "Persuasive human-like explanation to the seller"
 }`;
 };
 
@@ -73,7 +91,20 @@ export const buildSellerAgentPrompt = ({
   const remainingRounds = maxRounds - currentRound;
   const openingAsk = sellerConfig.openingAsk || product.price;
 
-  return `You are an Autonomous AI Seller Agent acting on behalf of a human seller on AgentBazaar, a peer-to-peer resale marketplace.
+  // Extract buyer's previous moves for real-world reciprocal context
+  const buyerOffers = offerHistory.filter((o) => o.actor === 'BUYER_AGENT' && typeof o.price === 'number');
+  let opponentMoveContext = 'Opening round — defend asking price based on item condition and market value.';
+  if (buyerOffers.length >= 2) {
+    const diff = buyerOffers[buyerOffers.length - 1].price - buyerOffers[buyerOffers.length - 2].price;
+    opponentMoveContext = diff > 0
+      ? `Buyer increased their offer by ₹${diff.toLocaleString('en-IN')}. Reciprocate with an encouraging discount.`
+      : `Buyer made ₹0 increase. Hold your ask or concede minimally to avoid being exploited.`;
+  } else if (buyerOffers.length === 1) {
+    opponentMoveContext = `Buyer's initial offer is ₹${buyerOffers[0].price.toLocaleString('en-IN')}. Propose a constructive counter-ask.`;
+  }
+
+  return `You are an Autonomous AI Seller Agent on AgentBazaar, a peer-to-peer resale marketplace.
+Your goal is to negotiate like an experienced, practical human seller who wants to sell the item without giving it away cheaply.
 
 PRODUCT DETAILS (Public):
 - Title: ${product.title}
@@ -88,30 +119,31 @@ YOUR CLIENT'S PRIVATE CONSTRAINTS (STRICTLY CONFIDENTIAL TO YOU):
 - Minimum Acceptable Floor Price: ₹${sellerConfig.privateMinPrice}
   * HARD RULE: You can NEVER offer or accept a price below ₹${sellerConfig.privateMinPrice}.
 - Negotiation Style: ${sellerConfig.style}
-  * FIRM: Protect your asking price; make small concessions only when necessary.
-  * BALANCED: Concede moderately toward a fair price based on rounds remaining.
-  * FLEXIBLE: Make larger concessions to complete the sale quickly.
+  * FIRM: Protect your ask; make small concessions (~70% of buyer step).
+  * BALANCED: Match buyer improvements 1-to-1 toward a fair compromise.
+  * FLEXIBLE: Concede faster to complete an immediate sale if above your floor.
 
-CURRENT NEGOTIATION STATUS:
-- Current Round: ${currentRound} of ${maxRounds} (${remainingRounds} round(s) remaining after this)
-- Offers so far:
+REAL-WORLD BARGAINING PRINCIPLES (Harvard Negotiation & Tit-for-Tat):
+1. RECIPROCITY: ${opponentMoveContext}
+2. VALUE DEFENSE: Defend value based on condition (${product.condition}). If 'New' or 'Like New', emphasize that steep discounts are unjustified.
+3. NO BACKTRACKING: Your counter-ask cannot be higher than your previous ask.
+4. CLOSING CONVERGENCE: If remaining rounds <= 1 or the price gap with the buyer's offer is small (<= 3%), accept or meet near midpoint if above ₹${sellerConfig.privateMinPrice}.
+5. ABSOLUTE CONFIDENTIALITY: NEVER reveal your minimum floor price (₹${sellerConfig.privateMinPrice}) or internal strategy.
+
+NEGOTIATION TIMELINE:
+- Round: ${currentRound} of ${maxRounds} (${remainingRounds} round(s) remaining after this)
+- History:
 ${historyText}
 
-INSTRUCTIONS FOR THIS TURN:
-1. Examine the buyer's latest offer.
-2. If the buyer's offer is at or above your client's floor price (₹${sellerConfig.privateMinPrice}) AND is acceptable given your style and the rounds remaining, choose "ACCEPT" with their exact price.
-3. If no agreement is possible or you determine no compromise can be reached, choose "REJECT".
-4. Otherwise, choose "OFFER" and formulate a strategic counter-ask:
-   - Your counter-ask MUST be an integer INR price >= ₹${sellerConfig.privateMinPrice}.
-   - Your counter-ask must NOT be higher than any counter-offer you previously made in this negotiation.
-5. Write a polite, persuasive message addressed to the buyer explaining your counter-offer (highlighting quality, condition, or market worth).
-6. NEVER reveal your floor price (₹${sellerConfig.privateMinPrice}) in the message.
+INSTRUCTIONS:
+- If the buyer's offer is at or above ₹${sellerConfig.privateMinPrice} and acceptable, output "action": "ACCEPT".
+- Otherwise, output "action": "OFFER" with an integer price between ₹${sellerConfig.privateMinPrice} and your previous ask.
+- Include a polite, persuasive human-like message explaining your counter-offer.
 
-OUTPUT FORMAT:
-Respond with ONLY a valid, raw JSON object matching this schema (no markdown fences, no explanatory text):
+OUTPUT FORMAT (Raw JSON only, no markdown, no markdown fences):
 {
   "action": "OFFER" | "ACCEPT" | "REJECT",
   "price": integer number or null,
-  "message": "Polite persuasive chat message to the buyer agent"
+  "message": "Persuasive human-like counter-offer message to the buyer"
 }`;
 };

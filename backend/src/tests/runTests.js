@@ -261,6 +261,53 @@ async function runTestSuite() {
   assert(Review.schema.path('flagged') !== undefined, 'Review schema has flagged field');
 
   // -----------------------------------------------------------------
+  // 7. REAL-WORLD HUMAN RECIPROCITY & AXELROD TIT-FOR-TAT
+  // -----------------------------------------------------------------
+  console.log('\nTest Group 7: Real-World Human Reciprocal Negotiation (Axelrod & Harvard Model)');
+
+  // 7.1 Concession Reciprocity: When seller concedes ₹1,000, buyer reciprocates with higher offer
+  const buyerReciprocalMove = calculateConcessionMove({
+    actor: 'BUYER_AGENT',
+    product: mockProduct,
+    privateConfig: { targetPrice: 15000, budgetCeiling: 18000, style: 'BALANCED' },
+    currentRound: 2,
+    maxRounds: 5,
+    offerHistory: [
+      { round: 1, actor: 'BUYER_AGENT', price: 15000, action: 'OFFER' },
+      { round: 1, actor: 'SELLER_AGENT', price: 19000, action: 'OFFER' }, // Conceded ₹1,000 from listed 20,000
+    ]
+  });
+  assert(buyerReciprocalMove.price > 15000, 'Buyer reciprocates with increased offer when seller concedes');
+
+  // 7.2 Unreciprocated Stubbornness Defense: When seller concedes ₹0, buyer holds ground
+  const buyerHoldGroundMove = calculateConcessionMove({
+    actor: 'BUYER_AGENT',
+    product: mockProduct,
+    privateConfig: { targetPrice: 15000, budgetCeiling: 18000, style: 'FIRM' },
+    currentRound: 2,
+    maxRounds: 5,
+    offerHistory: [
+      { round: 1, actor: 'BUYER_AGENT', price: 15000, action: 'OFFER' },
+      { round: 1, actor: 'SELLER_AGENT', price: 20000, action: 'OFFER' }, // Conceded ₹0
+    ]
+  });
+  assert(buyerHoldGroundMove.price === 15000, 'Buyer FIRM stance holds offer when opponent refuses to concede (₹0 step)');
+
+  // 7.3 Closing Gap Auto-Agreement: When price gap is within tolerance, triggers ACCEPT
+  const closingMove = calculateConcessionMove({
+    actor: 'BUYER_AGENT',
+    product: mockProduct,
+    privateConfig: { targetPrice: 15000, budgetCeiling: 18000, style: 'BALANCED' },
+    currentRound: 4,
+    maxRounds: 5,
+    offerHistory: [
+      { round: 3, actor: 'BUYER_AGENT', price: 17200, action: 'OFFER' },
+      { round: 3, actor: 'SELLER_AGENT', price: 17400, action: 'OFFER' }, // Gap is only ₹200 (<= 3%)
+    ]
+  });
+  assert(closingMove.action === 'ACCEPT', 'Trivial price gap triggers deal ACCEPT instead of prolonging friction');
+
+  // -----------------------------------------------------------------
   // TEST SUMMARY
   // -----------------------------------------------------------------
   console.log('\n==================================================');
