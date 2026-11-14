@@ -1,0 +1,11 @@
+{
+  "name": "agentbazaar-workspace",
+  "version": "1.0.0",
+  "description": "AgentBazaar - AI-Powered Peer-to-Peer Resale Marketplace with Autonomous Negotiation",
+  "scripts": {
+    "backend": "cd backend && npm start",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed"
+  }
+}
