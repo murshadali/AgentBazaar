@@ -19,18 +19,14 @@ export const AgentChatBubble = ({ offer, isCurrentUserBuyer, isCurrentUserSeller
       </div>
 
       {/* Bubble Container */}
-      <div className={`max-w-[85%] sm:max-w-[75%] rounded-3xl p-4 border transition-all shadow-xs ${
-        isBuyerAgent
-          ? 'bg-indigo-50/60 border-indigo-100 rounded-tl-xs'
-          : 'bg-white border-slate-200 rounded-tr-xs'
-      }`}>
+      <div className="max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 border border-slate-200 bg-slate-50 transition-all shadow-2xs">
         {/* Meta Header */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-slate-200/80">
           <div className="flex items-center gap-2">
-            <span className={`text-xs font-bold ${isBuyerAgent ? 'text-indigo-700' : 'text-slate-800'}`}>
+            <span className="text-xs font-bold text-slate-900">
               {isBuyerAgent ? 'Buyer AI Agent' : 'Seller AI Agent'}
             </span>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200 shadow-2xs">
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200">
               Round {offer.round}
             </span>
           </div>
@@ -39,16 +35,16 @@ export const AgentChatBubble = ({ offer, isCurrentUserBuyer, isCurrentUserSeller
           <div className="flex items-center gap-1.5">
             <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${
               isAccept
-                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                 : isReject
-                ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                : 'bg-slate-100 text-slate-700 border border-slate-300'
+                ? 'bg-rose-50 text-rose-800 border border-rose-200'
+                : 'bg-white text-slate-700 border border-slate-200'
             }`}>
               {offer.action || 'OFFER'}
             </span>
 
             {offer.price !== null && offer.price !== undefined && (
-              <span className="px-2.5 py-0.5 rounded-lg text-xs font-mono font-extrabold bg-indigo-600 text-white shadow-2xs">
+              <span className="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-white text-slate-900 border border-slate-200 shadow-2xs">
                 ₹{offer.price.toLocaleString('en-IN')}
               </span>
             )}
@@ -56,7 +52,7 @@ export const AgentChatBubble = ({ offer, isCurrentUserBuyer, isCurrentUserSeller
         </div>
 
         {/* Conversational Message */}
-        <p className="text-xs sm:text-sm text-slate-800 leading-relaxed mb-2">
+        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-2">
           {offer.message}
         </p>
 

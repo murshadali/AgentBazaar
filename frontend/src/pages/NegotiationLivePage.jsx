@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
-  Bot,
   Play,
   StepForward,
   XCircle,
@@ -9,7 +8,8 @@ import {
   Clock,
   ArrowRight,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  MessageSquare
 } from 'lucide-react';
 import api from '../services/api';
 import { useSocket } from '../context/SocketContext';
@@ -28,10 +28,11 @@ export const NegotiationLivePage = () => {
   const [userRole, setUserRole] = useState('buyer');
   const [loading, setLoading] = useState(true);
   const [stepping, setStepping] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [thinkingState, setThinkingState] = useState(null);
   const [error, setError] = useState('');
 
-  const chatBottomRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const fetchNegotiation = async () => {
     try {
@@ -104,10 +105,12 @@ export const NegotiationLivePage = () => {
     };
   }, [socket, id]);
 
-  // Auto-scroll on new message
+  // Scroll only the chat container feed without jumping or scrolling the page window
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [offers, thinkingState]);
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [offers.length, thinkingState]);
 
   const handleNextTurn = async () => {
     setStepping(true);
@@ -139,6 +142,54 @@ export const NegotiationLivePage = () => {
     }
   };
 
+  const handleApproveDeal = async () => {
+    const deal = typeof negotiation.dealId === 'object' && negotiation.dealId !== null ? negotiation.dealId : negotiation.deal;
+    const dealId = deal?._id || (typeof negotiation.dealId === 'string' ? negotiation.dealId : null);
+
+    if (!dealId) {
+      navigate('/deals');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Confirm Deal Proposal:\n\nDo you explicitly agree to finalize this transaction at the agreed price of ₹${negotiation.agreedPrice?.toLocaleString('en-IN')}?`
+    );
+    if (!confirmed) return;
+
+    setActionLoading(true);
+    try {
+      await api.post(`/deals/${dealId}/approve`);
+      await fetchNegotiation();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to approve deal proposal');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleRejectDeal = async () => {
+    const deal = typeof negotiation.dealId === 'object' && negotiation.dealId !== null ? negotiation.dealId : negotiation.deal;
+    const dealId = deal?._id || (typeof negotiation.dealId === 'string' ? negotiation.dealId : null);
+
+    if (!dealId) {
+      navigate('/deals');
+      return;
+    }
+
+    const reason = prompt('Please enter a reason for declining this deal proposal:');
+    if (reason === null) return;
+
+    setActionLoading(true);
+    try {
+      await api.post(`/deals/${dealId}/reject`, { reason });
+      await fetchNegotiation();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to decline deal proposal');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -161,6 +212,15 @@ export const NegotiationLivePage = () => {
   const isAgreed = negotiation.status === 'AGREED';
   const isActive = negotiation.status === 'IN_PROGRESS' || negotiation.status === 'INITIATED';
   const product = negotiation.productId || negotiation.product || {};
+
+  const deal = typeof negotiation.dealId === 'object' && negotiation.dealId !== null ? negotiation.dealId : (negotiation.deal || null);
+  const isBuyer = userRole === 'buyer';
+  const isSeller = userRole === 'seller';
+  const myApproval = isBuyer ? deal?.buyerApproval : isSeller ? deal?.sellerApproval : null;
+  const hasApproved = myApproval?.status === 'APPROVED';
+  const hasRejected = myApproval?.status === 'REJECTED' || deal?.status === 'REJECTED';
+  const isConfirmed = deal?.status === 'CONFIRMED';
+  const isCompleted = deal?.status === 'COMPLETED';
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-left space-y-6">
@@ -226,13 +286,40 @@ export const NegotiationLivePage = () => {
           )}
 
           {isAgreed && (
-            <Link
-              to="/deals"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-xs transition-colors"
-            >
-              <span>View Deal Proposal</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            isConfirmed || isCompleted ? (
+              <Link
+                to="/deals"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-xs transition-colors"
+              >
+                <span>View Final Deal</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : hasApproved ? (
+              <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+                ✓ You Approved
+              </span>
+            ) : hasRejected ? (
+              <span className="text-xs font-semibold text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200">
+                Declined
+              </span>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleRejectDeal}
+                  disabled={actionLoading}
+                  className="px-3 py-1.5 rounded-xl border border-slate-300 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition-colors disabled:opacity-50"
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={handleApproveDeal}
+                  disabled={actionLoading}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition-colors shadow-xs disabled:opacity-50"
+                >
+                  {actionLoading ? 'Saving...' : 'Approve Deal'}
+                </button>
+              </div>
+            )
           )}
         </div>
       </div>
@@ -241,24 +328,17 @@ export const NegotiationLivePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Chat Feed */}
         <div className="lg:col-span-8 bg-white border border-slate-200 rounded-3xl p-5 flex flex-col h-[650px] shadow-xs">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-            <div className="flex items-center gap-2">
-              <Bot className="w-4 h-4 text-indigo-600" />
-              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Autonomous Negotiation Stream
-              </h2>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Socket.IO Live</span>
-            </div>
+          <div className="pb-3 border-b border-slate-100 mb-4">
+            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+              Autonomous Negotiation
+            </h2>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto pr-2 space-y-2">
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto pr-2 space-y-2">
             {offers.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 text-xs">
-                <Bot className="w-10 h-10 mb-2 text-slate-300 animate-pulse" />
+                <MessageSquare className="w-10 h-10 mb-2 text-slate-300 animate-pulse" />
                 <p>Deploying AI agents... The opening offer will appear momentarily.</p>
               </div>
             ) : (
@@ -275,35 +355,105 @@ export const NegotiationLivePage = () => {
             {/* Thinking status */}
             {thinkingState && (
               <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 animate-pulse">
-                <Bot className="w-4 h-4 text-indigo-600 shrink-0" />
+                <MessageSquare className="w-4 h-4 text-indigo-600 shrink-0" />
                 <span>{thinkingState.message}</span>
               </div>
             )}
-
-            <div ref={chatBottomRef} />
           </div>
 
           {/* Agreement Banner */}
           {isAgreed && (
-            <div className="mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
-                <div>
-                  <h4 className="text-sm font-bold text-emerald-950">
-                    Deal Proposed at ₹{negotiation.agreedPrice?.toLocaleString('en-IN')}!
-                  </h4>
-                  <p className="text-xs text-emerald-800">
-                    Both buyer and seller must confirm and approve before meetup details unlock.
-                  </p>
+            isConfirmed || isCompleted ? (
+              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      Deal Finalized at ₹{negotiation.agreedPrice?.toLocaleString('en-IN')}!
+                    </h4>
+                    <p className="text-xs text-slate-600">
+                      Both parties have confirmed. Handover meetup details are now unlocked.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to="/deals"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl text-xs shrink-0 transition-colors shadow-2xs"
+                >
+                  View Meetup Details →
+                </Link>
+              </div>
+            ) : hasRejected ? (
+              <div className="mt-4 p-4 rounded-2xl bg-rose-50 border border-rose-200 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-rose-950">
+                      Deal Proposal Declined
+                    </h4>
+                    <p className="text-xs text-rose-800">
+                      This negotiation deal was declined. No transaction will occur.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to="/marketplace"
+                  className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold px-4 py-2 rounded-xl text-xs shrink-0 transition-colors"
+                >
+                  Browse Marketplace
+                </Link>
+              </div>
+            ) : hasApproved ? (
+              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      Approved by you (₹{negotiation.agreedPrice?.toLocaleString('en-IN')})
+                    </h4>
+                    <p className="text-xs text-slate-600">
+                      Waiting for the other party to approve. Once both approve, handover details will unlock.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to="/deals"
+                  className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold px-4 py-2 rounded-xl text-xs shrink-0 transition-colors"
+                >
+                  Check Status in Deals
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      Deal Proposed at ₹{negotiation.agreedPrice?.toLocaleString('en-IN')}!
+                    </h4>
+                    <p className="text-xs text-slate-600">
+                      Both parties must approve. You can accept or decline this offer now.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleRejectDeal}
+                    disabled={actionLoading}
+                    className="px-3.5 py-2 rounded-xl border border-slate-300 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition-colors disabled:opacity-50"
+                  >
+                    Decline Offer
+                  </button>
+                  <button
+                    onClick={handleApproveDeal}
+                    disabled={actionLoading}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors shadow-2xs disabled:opacity-50"
+                  >
+                    {actionLoading ? 'Processing...' : 'Approve Deal'}
+                  </button>
                 </div>
               </div>
-              <Link
-                to="/deals"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shrink-0 shadow-xs"
-              >
-                Approve Deal →
-              </Link>
-            </div>
+            )
           )}
         </div>
 

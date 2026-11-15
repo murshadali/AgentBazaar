@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bot, ShieldCheck, Zap, Handshake, CheckCircle2, ArrowRight, Lock, Star, Clock, UserCheck, Activity, Award } from 'lucide-react';
+import { ShieldCheck, Zap, Handshake, CheckCircle2, ArrowRight, Lock, Star, Clock, UserCheck, Activity, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const HowItWorksPage = () => {
@@ -7,10 +7,6 @@ export const HowItWorksPage = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-left space-y-12">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3">
-          <Bot className="w-3.5 h-3.5" />
-          <span>Protocol Architecture & Game-Theoretic Foundations</span>
-        </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
           How AgentBazaar Autonomous Negotiation Works
         </h1>
@@ -22,7 +18,7 @@ export const HowItWorksPage = () => {
       {/* 4 Step Workflow */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
-          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
+          <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 font-extrabold flex items-center justify-center text-sm mb-4">
             1
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Seller Configures Agent</h3>
@@ -32,7 +28,7 @@ export const HowItWorksPage = () => {
         </div>
 
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
-          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
+          <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 font-extrabold flex items-center justify-center text-sm mb-4">
             2
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Buyer Deploys Agent</h3>
@@ -42,7 +38,7 @@ export const HowItWorksPage = () => {
         </div>
 
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
-          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
+          <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 font-extrabold flex items-center justify-center text-sm mb-4">
             3
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Autonomous Haggle</h3>
@@ -52,7 +48,7 @@ export const HowItWorksPage = () => {
         </div>
 
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative">
-          <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-sm mb-4">
+          <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 font-extrabold flex items-center justify-center text-sm mb-4">
             4
           </span>
           <h3 className="text-sm font-bold text-slate-900 mb-1.5">Dual Human Approval</h3>
@@ -66,9 +62,9 @@ export const HowItWorksPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
         {/* Card 1: Confidential Boundaries */}
         <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5 text-blue-600">
+          <div className="flex items-center gap-2.5 text-indigo-600">
             <Lock className="w-5 h-5" />
-            <h3 className="text-base font-bold text-slate-900">Confidential Price Privacy (NFR1)</h3>
+            <h3 className="text-base font-bold text-slate-900">Confidential Price Privacy</h3>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
             Neither party ever sees the counterparty’s confidential limit:
@@ -93,7 +89,7 @@ export const HowItWorksPage = () => {
         <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5 text-amber-600">
             <ShieldCheck className="w-5 h-5" />
-            <h3 className="text-base font-bold text-slate-900">Programmatic Guardrails (NFR2)</h3>
+            <h3 className="text-base font-bold text-slate-900">Programmatic Guardrails</h3>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
             All AI decisions are intercepted and validated by backend code before storage:
@@ -162,14 +158,14 @@ export const HowItWorksPage = () => {
       </div>
 
       {/* CTA Bottom Banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 text-center space-y-4">
-        <h3 className="text-xl font-bold text-blue-950">Ready to Experience Autonomous Haggling?</h3>
-        <p className="text-xs text-blue-800 max-w-md mx-auto">
-          Explore our verified listings and configure your own AI buyer agent right now.
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center space-y-4">
+        <h3 className="text-xl font-bold text-slate-900">Ready to Experience Autonomous Haggling?</h3>
+        <p className="text-xs text-slate-600 max-w-md mx-auto">
+          Explore our verified listings and configure your confidential offer strategy right now.
         </p>
         <Link
           to="/marketplace"
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl text-xs shadow-sm transition-colors"
+          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl text-xs shadow-sm transition-colors"
         >
           <span>Explore Marketplace Listings</span>
           <ArrowRight className="w-4 h-4" />

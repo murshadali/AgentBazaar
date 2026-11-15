@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageSquareCode, Bot, ArrowRight, Clock, CheckCircle2, XCircle, Search } from 'lucide-react';
+import { MessageSquare, ArrowRight, Clock, CheckCircle2, XCircle, Search } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -36,16 +36,12 @@ export const MyNegotiationsPage = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-left space-y-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-left space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-2">
-            <MessageSquareCode className="w-6 h-6 text-indigo-600" />
-            <span>My AI Negotiations</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
+            All Negotiations
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Monitor and review autonomous Buyer and Seller Agent negotiation sessions.
-          </p>
         </div>
 
         {/* Tab Selector */}
@@ -76,7 +72,7 @@ export const MyNegotiationsPage = () => {
         </div>
       ) : filteredNegotiations.length === 0 ? (
         <div className="py-16 text-center bg-white border border-slate-200 rounded-3xl p-8 shadow-xs">
-          <Bot className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-base font-bold text-slate-800 mb-1">No Negotiations in this Category</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
             Deploy an autonomous AI Buyer Agent on any active marketplace listing to negotiate prices for you.

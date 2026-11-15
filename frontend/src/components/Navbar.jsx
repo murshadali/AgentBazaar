@@ -2,20 +2,14 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  Bot,
+  ShoppingBag,
   PlusCircle,
-  MessageSquareCode,
-  Handshake,
   User,
   LogOut,
   Menu,
   X,
   Star,
-  ShieldCheck,
-  Package,
-  LayoutDashboard,
-  HelpCircle,
-  Sliders
+  ShieldCheck
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -32,21 +26,18 @@ export const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <Bot className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-sm group-hover:bg-indigo-700 transition-colors">
+              <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-lg tracking-tight text-slate-900">
                   Agent<span className="text-indigo-600">Bazaar</span>
-                </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  AI P2P
                 </span>
               </div>
             </div>
@@ -72,55 +63,53 @@ export const Navbar = () => {
               Browse Products
             </Link>
 
-            <Link
-              to="/how-it-works"
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                isActive('/how-it-works') ? 'text-indigo-600 bg-indigo-50/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              How It Works
-            </Link>
+            {!isAuthenticated && (
+              <Link
+                to="/how-it-works"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/how-it-works') ? 'text-indigo-600 bg-indigo-50/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                How It Works
+              </Link>
+            )}
 
             {isAuthenticated && (
               <>
                 <Link
                   to="/dashboard"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive('/dashboard') ? 'text-indigo-600 bg-indigo-50/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <LayoutDashboard className="w-4 h-4 text-indigo-500" />
-                  <span>Dashboard</span>
+                  Dashboard
                 </Link>
 
                 <Link
                   to="/my-listings"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive('/my-listings') ? 'text-indigo-600 bg-indigo-50/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Package className="w-4 h-4 text-slate-500" />
-                  <span>My Listings</span>
+                  My Listings
                 </Link>
 
                 <Link
                   to="/negotiations"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive('/negotiations') ? 'text-indigo-600 bg-indigo-50/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <MessageSquareCode className="w-4 h-4 text-blue-500" />
-                  <span>Negotiations</span>
+                  Negotiations
                 </Link>
 
                 <Link
                   to="/deals"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive('/deals') ? 'text-indigo-600 bg-indigo-50/80 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Handshake className="w-4 h-4 text-emerald-600" />
-                  <span>Deals</span>
+                  Deals
                 </Link>
 
                 {isAdmin && (
@@ -154,31 +143,50 @@ export const Navbar = () => {
 
                 <div className="h-5 w-px bg-slate-200 mx-1" />
 
-                <Link
-                  to="/profile"
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-indigo-300 transition-colors"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
-                    {user?.name?.charAt(0) || 'U'}
-                  </div>
-                  <div className="text-left">
-                    <p className="text-xs font-semibold text-slate-800 leading-tight">
-                      {user?.name?.split(' ')[0]}
-                    </p>
-                    <div className="flex items-center gap-1 text-[10px] text-amber-500 font-semibold">
-                      <Star className="w-2.5 h-2.5 fill-amber-400" />
-                      <span>{user?.reputation?.averageRating || '5.0'}</span>
+                {/* User Profile with Dropdown on Hover */}
+                <div className="relative group">
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
+                      {user?.name?.charAt(0) || 'U'}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-xs font-semibold text-slate-800 leading-tight">
+                        {user?.name?.split(' ')[0]}
+                      </p>
+                      <div className="flex items-center gap-1 text-[10px] text-amber-500 font-semibold">
+                        <Star className="w-2.5 h-2.5 fill-amber-400" />
+                        <span>{user?.reputation?.averageRating || '5.0'}</span>
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Dropdown Menu on Hover */}
+                  <div className="absolute right-0 top-full pt-1.5 w-48 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-150 z-50">
+                    <div className="bg-white border border-slate-200 rounded-xl shadow-lg p-1.5 text-left">
+                      <div className="px-3 py-2 border-b border-slate-100">
+                        <p className="text-xs font-bold text-slate-900 truncate">{user?.name}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
+                      </div>
+                      <Link
+                        to="/profile"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <User className="w-3.5 h-3.5 text-slate-500" />
+                        <span>Profile & Settings</span>
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Log Out</span>
+                      </button>
                     </div>
                   </div>
-                </Link>
-
-                <button
-                  onClick={handleLogout}
-                  title="Logout"
-                  className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
+                </div>
               </>
             ) : (
               <div className="flex items-center gap-2">
@@ -227,13 +235,15 @@ export const Navbar = () => {
           >
             Browse Products
           </Link>
-          <Link
-            to="/how-it-works"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100"
-          >
-            How It Works
-          </Link>
+          {!isAuthenticated && (
+            <Link
+              to="/how-it-works"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              How It Works
+            </Link>
+          )}
 
           {isAuthenticated ? (
             <>

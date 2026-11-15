@@ -223,15 +223,15 @@ export const NegotiationTimeline = ({ offers = [], agreedPrice, maxRounds = 5, s
         })}
 
         {(status === 'AGREED' || status === 'agreed') && agreedPrice && (
-          <div className="mt-3 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center shadow-xs">
-            <div className="flex items-center justify-center gap-1.5 text-emerald-800 font-bold text-xs mb-0.5">
+          <div className="mt-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <div className="flex items-center justify-center gap-1.5 text-slate-800 font-bold text-xs mb-0.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Agents Successfully Converged!</span>
+              <span>Agents Successfully Converged</span>
             </div>
-            <p className="text-xl font-mono font-black text-emerald-950">
+            <p className="text-xl font-mono font-black text-emerald-700">
               ₹{agreedPrice.toLocaleString('en-IN')}
             </p>
-            <p className="text-[11px] text-emerald-700 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               Mutual agreement reached via reciprocal concession matching.
             </p>
           </div>

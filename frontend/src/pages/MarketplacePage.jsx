@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Bot, RefreshCw, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { Search, Filter, Package, RefreshCw, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import api from '../services/api';
 import { ProductCard } from '../components/ProductCard';
 import { NegotiationModal } from '../components/NegotiationModal';
@@ -87,9 +87,6 @@ export const MarketplacePage = () => {
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
             Marketplace Listings
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Browse verified second-hand items ({totalCount} active items found)
-          </p>
         </div>
 
         {/* Refresh button */}
@@ -213,7 +210,7 @@ export const MarketplacePage = () => {
         </div>
       ) : products.length === 0 ? (
         <div className="py-16 text-center bg-white border border-slate-200 rounded-3xl p-8 shadow-xs">
-          <Bot className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <Package className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-base font-bold text-slate-800 mb-1">No Active Listings Found</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
             Try adjusting your search keywords, category pills, or price range filters.

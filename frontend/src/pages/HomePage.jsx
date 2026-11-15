@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bot, ShieldCheck, Zap, Handshake, ArrowRight, Star, CheckCircle, Search, TrendingUp } from 'lucide-react';
+import { ShieldCheck, Zap, Handshake, ArrowRight, Star, CheckCircle, Search, TrendingUp, MessageSquare } from 'lucide-react';
 import api from '../services/api';
 import { ProductCard } from '../components/ProductCard';
 import { NegotiationModal } from '../components/NegotiationModal';
@@ -40,20 +40,12 @@ export const HomePage = () => {
   return (
     <div className="text-left">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50/50 via-white to-slate-50 border-b border-slate-200 py-16 sm:py-24">
+      <section className="relative overflow-hidden bg-white border-b border-slate-200 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold shadow-2xs">
-                <Bot className="w-3.5 h-3.5" />
-                <span>Autonomous Agent-to-Agent Negotiation Protocol</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                Peer-to-Peer Resale Marketplace with{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">
-                  Autonomous AI Haggle
-                </span>
+                Peer-to-Peer Resale Marketplace with Autonomous Negotiation
               </h1>
 
               <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
@@ -84,11 +76,11 @@ export const HomePage = () => {
                   <span>Confidential price limits</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-500 shrink-0" />
+                  <Zap className="w-4 h-4 text-indigo-600 shrink-0" />
                   <span>Strict AI guardrails</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Handshake className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <Handshake className="w-4 h-4 text-indigo-600 shrink-0" />
                   <span>Dual human approval</span>
                 </div>
               </div>
@@ -96,23 +88,23 @@ export const HomePage = () => {
 
             {/* Hero Visual Card */}
             <div className="lg:col-span-5">
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xl space-y-4">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <span className="text-xs font-bold text-slate-800">Live Agent Negotiation Preview</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="text-xs font-bold text-slate-900">Live Agent Negotiation Preview</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
                     Round 3 / 5
                   </span>
                 </div>
 
                 {/* Simulated Buyer Turn */}
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-indigo-50/70 border border-indigo-100 text-xs">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0">
-                    <Bot className="w-4 h-4" />
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold shrink-0">
+                    <MessageSquare className="w-4 h-4" />
                   </div>
                   <div>
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-bold text-indigo-950">Buyer Agent</span>
-                      <span className="font-mono font-bold text-indigo-700">Offer: ₹17,000</span>
+                      <span className="font-bold text-slate-900">Buyer Agent</span>
+                      <span className="font-mono font-bold text-slate-900">Offer: ₹17,000</span>
                     </div>
                     <p className="text-slate-600 mt-1 text-[11px] leading-relaxed">
                       "Considering the Like New condition of the MacBook, we propose ₹17,000 for a prompt cash deal."
@@ -121,14 +113,14 @@ export const HomePage = () => {
                 </div>
 
                 {/* Simulated Seller Turn */}
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
-                  <div className="w-8 h-8 rounded-xl bg-slate-800 text-white flex items-center justify-center font-bold shrink-0">
-                    <Bot className="w-4 h-4" />
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold shrink-0">
+                    <MessageSquare className="w-4 h-4" />
                   </div>
                   <div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-bold text-slate-900">Seller Agent</span>
-                      <span className="font-mono font-bold text-slate-800">Counter: ₹17,500</span>
+                      <span className="font-mono font-bold text-slate-900">Counter: ₹17,500</span>
                     </div>
                     <p className="text-slate-600 mt-1 text-[11px] leading-relaxed">
                       "I appreciate your offer. In Civil Lines, my lowest counter-offer is ₹17,500."
@@ -136,12 +128,15 @@ export const HomePage = () => {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
+                {/* Agreed Price */}
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span className="font-semibold text-emerald-900">Agreed Price: ₹17,500</span>
+                    <span className="font-semibold text-slate-800">
+                      Agreed Price: <span className="text-emerald-700 font-bold">₹17,500</span>
+                    </span>
                   </div>
-                  <span className="text-[10px] uppercase font-bold text-emerald-700 bg-white px-2 py-0.5 rounded-md border border-emerald-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-600 bg-white px-2 py-0.5 rounded-md border border-slate-200">
                     Requires Human Approval
                   </span>
                 </div>
@@ -155,8 +150,8 @@ export const HomePage = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-2xl font-black text-slate-900">Featured Active Listings</h2>
-            <p className="text-xs text-slate-500 mt-1">Pre-owned verified items ready for autonomous AI price negotiation</p>
+            <h2 className="text-2xl font-black text-slate-900">Fresh Resale Picks</h2>
+            <p className="text-xs text-slate-500 mt-1">Verified pre-owned items listed by trusted sellers</p>
           </div>
           <Link
             to="/marketplace"
@@ -186,20 +181,20 @@ export const HomePage = () => {
       </section>
 
       {/* Value Overview Banner */}
-      <section className="bg-slate-50 border-t border-b border-slate-200 py-16">
+      <section className="bg-white border-t border-slate-200 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Why Autonomous Resale Negotiation?
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2">
+            <p className="text-xs sm:text-sm text-slate-600 mt-2">
               Replacing endless awkward messaging with private algorithmic bargaining and dual human verification.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold mb-4">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold mb-4">
                 1
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-2">Zero Haggling Stress</h3>
@@ -208,8 +203,8 @@ export const HomePage = () => {
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold mb-4">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold mb-4">
                 2
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-2">Mathematical Guardrails</h3>
@@ -218,8 +213,8 @@ export const HomePage = () => {
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold mb-4">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold mb-4">
                 3
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-2">Dual Human Approval</h3>

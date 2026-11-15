@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlusCircle, Shield, Bot, AlertCircle, ArrowRight } from 'lucide-react';
+import { PlusCircle, Shield, Sliders, AlertCircle, ArrowRight } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -222,7 +222,7 @@ export const CreateListingPage = () => {
         <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold">
-              <Bot className="w-5 h-5" />
+              <Sliders className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">

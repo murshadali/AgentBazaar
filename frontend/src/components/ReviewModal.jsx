@@ -56,7 +56,7 @@ export const ReviewModal = ({ deal, isOpen, onClose, onReviewed }) => {
 
         <h2 className="text-xl font-bold text-slate-900 mb-1">Rate Transaction</h2>
         <p className="text-xs text-slate-500 mb-5">
-          Share your experience for <strong className="text-slate-800">{deal.productId?.title || deal.product?.title}</strong>
+          <strong className="text-slate-800">{deal.productId?.title || deal.product?.title}</strong>
         </p>
 
         {error && (

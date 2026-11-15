@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   MapPin,
   Star,
-  Bot,
+  Handshake,
   ShieldCheck,
   Calendar,
   ArrowLeft,
@@ -251,8 +251,8 @@ export const ProductDetailsPage = () => {
                       }}
                       className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-sm flex items-center justify-center gap-2 text-xs sm:text-sm transition-all"
                     >
-                      <Bot className="w-5 h-5" />
-                      <span>Negotiate with AI Agent</span>
+                      <Handshake className="w-5 h-5" />
+                      <span>Make an Offer</span>
                     </button>
                     <p className="text-[11px] text-center text-slate-500">
                       Private budget bounds. No deal finalized without your dual approval.

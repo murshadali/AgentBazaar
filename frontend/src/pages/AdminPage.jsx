@@ -4,7 +4,7 @@ import {
   Users,
   Package,
   Handshake,
-  Bot,
+  MessageSquare,
   Flag,
   CheckCircle2,
   XCircle,
@@ -14,7 +14,8 @@ import {
   ExternalLink,
   ShieldCheck,
   Trash2,
-  Sliders
+  Sliders,
+  Star
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -219,7 +220,7 @@ export const AdminPage = () => {
 
               <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
                 <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1.5">
-                  <Bot className="w-4 h-4 text-indigo-600" />
+                  <MessageSquare className="w-4 h-4 text-indigo-600" />
                   <span>Running Negotiations</span>
                 </div>
                 <div className="text-2xl font-black text-slate-900">
@@ -337,7 +338,10 @@ export const AdminPage = () => {
                           </span>
                         </td>
                         <td className="py-3 px-4 text-slate-600">
-                          ⭐ {Number(u.reputation?.averageRating || 5.0).toFixed(1)} ({u.reputation?.completedDeals || 0} deals)
+                          <span className="flex items-center gap-1">
+                            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400 shrink-0" />
+                            <span>{Number(u.reputation?.averageRating || 5.0).toFixed(1)} ({u.reputation?.completedDeals || 0} deals)</span>
+                          </span>
                         </td>
                         <td className="py-3 px-4 text-slate-600 font-medium">
                           {u.defaultStyle || 'BALANCED'} ({u.defaultRounds || 5} rds)

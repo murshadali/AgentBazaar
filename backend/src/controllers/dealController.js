@@ -3,6 +3,7 @@ import Product from '../models/Product.js';
 import Negotiation from '../models/Negotiation.js';
 import User from '../models/User.js';
 import Handover from '../models/Handover.js';
+import Review from '../models/Review.js';
 import { emitToNegotiation } from '../services/socketService.js';
 
 // Mask private contact details if deal is not CONFIRMED or COMPLETED (NFR7)
@@ -47,10 +48,23 @@ export const getUserDeals = async (req, res, next) => {
 
     const masked = deals.map((d) => maskDealPrivacy(d, req.user._id));
 
+    // Attach hasUserReviewed flag to each deal
+    const dealIds = deals.map((d) => d._id);
+    const userReviews = await Review.find({
+      dealId: { $in: dealIds },
+      reviewerId: req.user._id
+    }).select('dealId');
+    const reviewedDealIds = new Set(userReviews.map((r) => String(r.dealId)));
+
+    const dealsWithReviewFlag = masked.map((d) => ({
+      ...d,
+      hasUserReviewed: reviewedDealIds.has(String(d._id))
+    }));
+
     res.json({
       success: true,
-      count: masked.length,
-      deals: masked
+      count: dealsWithReviewFlag.length,
+      deals: dealsWithReviewFlag
     });
   } catch (error) {
     next(error);

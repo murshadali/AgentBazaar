@@ -27,7 +27,7 @@ import { AdminPage } from './pages/AdminPage';
 
 export const App = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 selection:bg-blue-100 selection:text-blue-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-white text-slate-800 selection:bg-indigo-100 selection:text-indigo-900 font-sans">
       <Navbar />
       <main className="flex-1">
         <Routes>

@@ -120,10 +120,7 @@ export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-100">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Deal Proposal #{deal._id.slice(-6)}
-          </span>
-          <h3 className="text-base font-bold text-slate-900 mt-0.5">
+          <h3 className="text-base font-bold text-slate-900">
             {deal.productId?.title || deal.product?.title || 'Product Resale Deal'}
           </h3>
         </div>
@@ -140,7 +137,7 @@ export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
       <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200">
         <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-indigo-600" />
-          <span>Dual Human Approval Gate (Mandatory)</span>
+          <span>Approval Status</span>
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -357,13 +354,20 @@ export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>Transaction Completed</span>
               </span>
-              <button
-                onClick={() => onReviewClick ? onReviewClick(deal) : null}
-                className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3.5 py-1.5 rounded-xl text-xs shadow-xs transition-colors"
-              >
-                <Star className="w-3.5 h-3.5 fill-slate-900" />
-                <span>Leave Review</span>
-              </button>
+              {!deal.hasUserReviewed ? (
+                <button
+                  onClick={() => onReviewClick ? onReviewClick(deal) : null}
+                  className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3.5 py-1.5 rounded-xl text-xs shadow-xs transition-colors"
+                >
+                  <Star className="w-3.5 h-3.5 fill-slate-900" />
+                  <span>Leave Review</span>
+                </button>
+              ) : (
+                <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1.5">
+                  <Star className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600" />
+                  <span>Review Submitted</span>
+                </span>
+              )}
             </div>
           )}
         </div>

@@ -55,34 +55,28 @@ export const DashboardPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-left space-y-8">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-md flex flex-wrap items-center justify-between gap-4">
+      {/* Page Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-300">
-            Marketplace Control Center
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-black mt-1">
-            Welcome back, {user?.name}!
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
+            Dashboard
           </h1>
-          <p className="text-xs text-indigo-200 mt-1 max-w-xl">
-            Track your autonomous AI negotiations, active product listings, and pending deal approvals in real time.
-          </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <Link
             to="/create-listing"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Post Listing</span>
           </Link>
           <Link
             to="/marketplace"
-            className="bg-white/10 hover:bg-white/20 text-white font-semibold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 transition-all"
+            className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-4 py-2.5 rounded-xl text-xs border border-slate-200 flex items-center gap-1.5 transition-all"
           >
             <Search className="w-4 h-4" />
-            <span>Browse</span>
+            <span>Browse Products</span>
           </Link>
         </div>
       </div>

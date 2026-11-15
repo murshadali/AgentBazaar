@@ -9,7 +9,6 @@ import {
   Mail,
   Edit,
   Save,
-  Bot,
   Sliders,
   Award,
   Sparkles,
@@ -232,8 +231,8 @@ export const ProfilePage = () => {
             {/* Negotiation Defaults */}
             <div className="pt-4 border-t border-slate-100">
               <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <Bot className="w-4 h-4 text-blue-600" />
-                <span>Default AI Agent Negotiation Style</span>
+                <Sliders className="w-4 h-4 text-indigo-600" />
+                <span>Default Negotiation Style</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
@@ -318,8 +317,8 @@ export const ProfilePage = () => {
 
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
             <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1.5">
-              <Bot className="w-4 h-4 text-blue-600" />
-              <span>Autonomous Style</span>
+              <Sliders className="w-4 h-4 text-indigo-600" />
+              <span>Negotiation Style</span>
             </div>
             <div className="text-2xl font-black text-slate-900 mt-1">
               {user?.defaultStyle || 'BALANCED'}

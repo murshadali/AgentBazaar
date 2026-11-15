@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Shield, X, AlertCircle, ArrowRight, Lock } from 'lucide-react';
+import { Handshake, Shield, X, AlertCircle, ArrowRight, Lock } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -102,11 +102,11 @@ export const NegotiationModal = ({ product, isOpen, onClose }) => {
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className="w-11 h-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-xs">
-            <Bot className="w-6 h-6" />
+            <Handshake className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Configure AI Buyer Agent</h2>
-            <p className="text-xs text-slate-500">Deploy your agent to haggle autonomously within confidential bounds</p>
+            <h2 className="text-xl font-bold text-slate-900">Make an Offer</h2>
+            <p className="text-xs text-slate-600">Configure your confidential price bounds for automated negotiation</p>
           </div>
         </div>
 

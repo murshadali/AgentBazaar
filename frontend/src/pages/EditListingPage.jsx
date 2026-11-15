@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Edit, Shield, Bot, AlertCircle, Save, ArrowLeft } from 'lucide-react';
+import { Edit, Shield, Sliders, AlertCircle, Save, ArrowLeft } from 'lucide-react';
 import api from '../services/api';
 
 export const EditListingPage = () => {
@@ -243,7 +243,7 @@ export const EditListingPage = () => {
         {/* Section 2: Seller Agent Settings */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
           <div className="flex items-center gap-2">
-            <Bot className="w-5 h-5 text-indigo-600" />
+            <Sliders className="w-5 h-5 text-indigo-600" />
             <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
               Seller Agent Configuration
             </h2>

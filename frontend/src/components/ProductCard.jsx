@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Star, Bot, UserCheck, AlertCircle } from 'lucide-react';
+import { MapPin, Star, Handshake, UserCheck, AlertCircle } from 'lucide-react';
 
 const conditionBadgeStyles = {
   'New': 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -87,10 +87,10 @@ export const ProductCard = ({ product, onNegotiate, currentUserId }) => {
             <button
               type="button"
               onClick={() => onNegotiate ? onNegotiate(product) : null}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white border border-indigo-200 hover:border-transparent py-2 px-3 rounded-xl text-xs font-semibold transition-all shadow-xs"
+              className="flex-1 flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-3 rounded-xl text-xs font-semibold transition-all shadow-xs"
             >
-              <Bot className="w-3.5 h-3.5" />
-              <span>Negotiate with AI</span>
+              <Handshake className="w-3.5 h-3.5" />
+              <span>Make an Offer</span>
             </button>
           )}
 
