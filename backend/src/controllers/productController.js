@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Product from '../models/Product.js';
 import SellerAgentConfig from '../models/SellerAgentConfig.js';
 
@@ -242,8 +243,24 @@ export const deleteProduct = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Not authorized to delete this listing' });
     }
 
-    product.status = 'REMOVED';
-    await product.save();
+    // Clean up associated seller agent config
+    await SellerAgentConfig.deleteMany({ productId: product._id });
+
+    // Check if there are confirmed or completed deals on this product
+    const dealCount = await mongoose.model('Deal').countDocuments({
+      productId: product._id,
+      status: { $in: ['CONFIRMED', 'COMPLETED'] }
+    });
+
+    if (dealCount > 0) {
+      // Retain for deal audit records, but marked as REMOVED
+      product.status = 'REMOVED';
+      await product.save();
+    } else {
+      // Completely remove product and its unfinalized negotiations
+      await Product.findByIdAndDelete(product._id);
+      await mongoose.model('Negotiation').deleteMany({ productId: product._id });
+    }
 
     res.json({
       success: true,
@@ -259,8 +276,11 @@ export const deleteProduct = async (req, res, next) => {
 // @access  Private
 export const getMyListings = async (req, res, next) => {
   try {
-    const products = await Product.find({ sellerId: req.user._id })
-      .sort({ createdAt: -1 });
+    // Only return listings that are not REMOVED
+    const products = await Product.find({
+      sellerId: req.user._id,
+      status: { $ne: 'REMOVED' }
+    }).sort({ createdAt: -1 });
 
     const productIds = products.map((p) => p._id);
     const configs = await SellerAgentConfig.find({ productId: { $in: productIds } }).select('+privateMinPrice');

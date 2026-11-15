@@ -36,6 +36,7 @@ export const MyListingsPage = () => {
     if (!window.confirm('Are you sure you want to remove this product listing?')) return;
     try {
       await api.delete(`/products/${id}`);
+      setListings((prev) => prev.filter((p) => p._id !== id));
       fetchMyListings();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete listing');

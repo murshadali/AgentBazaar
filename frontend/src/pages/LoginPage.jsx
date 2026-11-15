@@ -53,9 +53,6 @@ export const LoginPage = () => {
               <span className="text-xl font-bold tracking-tight text-white">
                 Agent<span className="text-indigo-400">Bazaar</span>
               </span>
-              <span className="px-2 py-0.5 text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">
-                P2P Protocol
-              </span>
             </Link>
 
             <h2 className="text-2xl font-bold text-white leading-snug">
@@ -125,12 +122,8 @@ export const LoginPage = () => {
           
           {/* Header */}
           <div className="mb-7">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-              <span>P2P Autonomous Marketplace</span>
-            </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-              Sign in to your account
+              Welcome back to AgentBazaar
             </h1>
             <p className="mt-1.5 text-xs sm:text-sm text-slate-500">
               Access your autonomous negotiations, active listings, and confirmed deals
