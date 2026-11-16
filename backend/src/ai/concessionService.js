@@ -99,16 +99,28 @@ export const calculateConcessionMove = ({
 
     // Direction check: Never offer less than previous offer (no backtracking)
     const myPreviousOffers = offerHistory.filter((o) => o.actor === 'BUYER_AGENT' && typeof o.price === 'number');
+    let hasRaised = true;
+    let isAtCeiling = false;
+
     if (myPreviousOffers.length > 0) {
       const highestMyOffer = Math.max(...myPreviousOffers.map((o) => o.price));
-      if (computedPrice < highestMyOffer) {
+      if (computedPrice <= highestMyOffer) {
         computedPrice = highestMyOffer;
+        hasRaised = false;
       }
+    }
+
+    if (computedPrice >= P_max) {
+      isAtCeiling = true;
     }
 
     // Build real-world persuasive messages referencing condition & reciprocity
     let contextualMessage = '';
-    if (opponentConcession > 0) {
+    if (isAtCeiling && !hasRaised) {
+      contextualMessage = `We appreciate your price adjustment. However, ₹${computedPrice.toLocaleString('en-IN')} is our strict maximum budget ceiling for this item. We cannot increase our offer further.`;
+    } else if (!hasRaised) {
+      contextualMessage = `We must hold firm at our current offer of ₹${computedPrice.toLocaleString('en-IN')} for the ${product.title}.`;
+    } else if (opponentConcession > 0) {
       contextualMessage = `We appreciate your price adjustment. In return, we are raising our offer to ₹${computedPrice.toLocaleString('en-IN')} for your ${product.title}.`;
     } else if (product.condition === 'Used' || product.condition === 'Fair') {
       contextualMessage = `Taking into account the ${product.condition} condition and market depreciation, our fair cash offer is ₹${computedPrice.toLocaleString('en-IN')}.`;
@@ -186,19 +198,31 @@ export const calculateConcessionMove = ({
 
     // Direction check: Never ask for more than previous ask
     const myPreviousAsks = offerHistory.filter((o) => o.actor === 'SELLER_AGENT' && typeof o.price === 'number');
+    let isAtFloor = false;
+    let hasLowered = true;
+
     if (myPreviousAsks.length > 0) {
       const lowestMyAsk = Math.min(...myPreviousAsks.map((o) => o.price));
-      if (computedPrice > lowestMyAsk) {
+      if (computedPrice >= lowestMyAsk) {
         computedPrice = lowestMyAsk;
+        hasLowered = false;
       }
     }
 
+    if (computedPrice <= P_floor) {
+      isAtFloor = true;
+    }
+
     let contextualMessage = '';
-    if (buyerRaise > 0) {
+    if (isAtFloor && !hasLowered) {
+      contextualMessage = `This is my absolute bottom-line floor price of ₹${computedPrice.toLocaleString('en-IN')}. I cannot discount any further.`;
+    } else if (!hasLowered) {
+      contextualMessage = `I must stand firm on my asking price of ₹${computedPrice.toLocaleString('en-IN')} for this item.`;
+    } else if (buyerRaise > 0) {
       contextualMessage = `Thank you for improving your offer. In the spirit of a fair deal, I am reducing my asking price to ₹${computedPrice.toLocaleString('en-IN')}.`;
     } else if (product.condition === 'New' || product.condition === 'Like New') {
       contextualMessage = `This item is in ${product.condition} condition with complete accessories. My best counter-offer is ₹${computedPrice.toLocaleString('en-IN')}.`;
-    } else if (currentRound >= maxRounds) {
+    } else if (currentRound >= maxRounds || isAtFloor) {
       contextualMessage = `This is my final bottom-line counter-offer of ₹${computedPrice.toLocaleString('en-IN')}. I cannot discount further.`;
     } else {
       contextualMessage = `I can adjust my price to ₹${computedPrice.toLocaleString('en-IN')} for an in-person handover in ${product.location}.`;

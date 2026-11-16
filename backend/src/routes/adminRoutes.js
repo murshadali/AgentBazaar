@@ -6,7 +6,9 @@ import {
   getAdminProducts,
   removeAdminProduct,
   getAdminDeals,
-  getFlaggedReviews
+  getFlaggedReviews,
+  dismissReviewFlag,
+  deleteAdminReview
 } from '../controllers/adminController.js';
 import { protect, adminOnly } from '../middleware/authMiddleware.js';
 
@@ -22,5 +24,7 @@ router.get('/products', getAdminProducts);
 router.delete('/products/:id', removeAdminProduct);
 router.get('/deals', getAdminDeals);
 router.get('/reviews/flagged', getFlaggedReviews);
+router.patch('/reviews/:id/dismiss', dismissReviewFlag);
+router.delete('/reviews/:id', deleteAdminReview);
 
 export default router;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Star, X, Check, AlertCircle } from 'lucide-react';
 import api from '../services/api';
 
-export const ReviewModal = ({ deal, isOpen, onClose, onReviewed }) => {
+export const ReviewModal = ({ deal, isOpen, onClose, onReviewed, onSuccess }) => {
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -36,6 +36,7 @@ export const ReviewModal = ({ deal, isOpen, onClose, onReviewed }) => {
       });
 
       if (onReviewed) onReviewed();
+      if (onSuccess) onSuccess();
       onClose();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit review');

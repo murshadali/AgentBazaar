@@ -12,7 +12,8 @@ import {
   Sliders,
   Award,
   Sparkles,
-  MessageSquare
+  MessageSquare,
+  Flag
 } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -64,6 +65,21 @@ export const ProfilePage = () => {
       fetchReviews();
     }
   }, [user?._id]);
+
+  const handleFlagReview = async (reviewId) => {
+    const reason = window.prompt('Please enter the reason for reporting this review (e.g. Abusive language, Spam, Fake):');
+    if (!reason || !reason.trim()) return;
+
+    try {
+      await api.post(`/reviews/${reviewId}/flag`, { reason: reason.trim() });
+      alert('Review reported to administrator for moderation.');
+      setReviews((prev) =>
+        prev.map((r) => (r._id === reviewId ? { ...r, flagged: true, flagReason: reason.trim() } : r))
+      );
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to report review');
+    }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -328,15 +344,15 @@ export const ProfilePage = () => {
         </div>
 
         {/* User Reviews */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
           <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-blue-600" />
+            <MessageSquare className="w-4 h-4 text-indigo-600" />
             <span>Community Feedback & Reviews ({reviews.length})</span>
           </h2>
 
           {loadingReviews ? (
             <div className="py-8 flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600" />
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600" />
             </div>
           ) : reviews.length === 0 ? (
             <div className="py-8 text-center text-slate-500 text-xs">
@@ -345,13 +361,13 @@ export const ProfilePage = () => {
           ) : (
             <div className="space-y-3">
               {reviews.map((rev) => (
-                <div key={rev._id} className="p-4 rounded-xl border border-slate-100 bg-slate-50/50">
-                  <div className="flex items-center justify-between mb-2">
+                <div key={rev._id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/70 space-y-2">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-xs text-slate-900">
                         {rev.reviewerId?.name || rev.reviewer?.name || 'Anonymous Peer'}
                       </span>
-                      <span className="text-xs text-slate-400">•</span>
+                      <span className="text-xs text-slate-300">•</span>
                       <div className="flex items-center">
                         {[1, 2, 3, 4, 5].map((s) => (
                           <Star
@@ -363,11 +379,28 @@ export const ProfilePage = () => {
                         ))}
                       </div>
                     </div>
-                    <span className="text-[10px] text-slate-400">
-                      {new Date(rev.createdAt).toLocaleDateString()}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] text-slate-400">
+                        {new Date(rev.createdAt).toLocaleDateString()}
+                      </span>
+                      {rev.flagged ? (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                          Reported to Admin
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleFlagReview(rev._id)}
+                          className="text-[11px] font-medium text-slate-400 hover:text-rose-600 flex items-center gap-1 transition-colors"
+                          title="Report abusive or fake review to administrator"
+                        >
+                          <Flag className="w-3 h-3" />
+                          <span>Report</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-600">{rev.comment || 'Smooth peer handover.'}</p>
+                  <p className="text-xs text-slate-700 leading-relaxed">{rev.comment || 'Smooth peer handover.'}</p>
                 </div>
               ))}
             </div>

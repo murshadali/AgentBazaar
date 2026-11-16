@@ -29,14 +29,26 @@ export const ProductDetailsPage = () => {
   const [error, setError] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
   const [negotiateModalOpen, setNegotiateModalOpen] = useState(false);
+  const [sellerReviews, setSellerReviews] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
         const res = await api.get(`/products/${id}`);
-        setProduct(res.data.product);
+        const p = res.data.product;
+        setProduct(p);
         setIsOwner(res.data.isOwner);
+
+        const sellerId = p.sellerId?._id || p.sellerId;
+        if (sellerId) {
+          try {
+            const revRes = await api.get(`/reviews/user/${sellerId}`);
+            setSellerReviews(revRes.data.reviews || []);
+          } catch (e) {
+            // non-blocking
+          }
+        }
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load product details');
       } finally {
@@ -50,8 +62,13 @@ export const ProductDetailsPage = () => {
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to remove this product listing?')) return;
     try {
-      await api.delete(`/products/${id}`);
-      navigate('/my-listings');
+      if (user?.role === 'ADMIN') {
+        await api.delete(`/admin/products/${id}`);
+        navigate('/admin');
+      } else {
+        await api.delete(`/products/${id}`);
+        navigate('/my-listings');
+      }
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to remove listing');
     }
@@ -174,8 +191,34 @@ export const ProductDetailsPage = () => {
               </div>
             </div>
 
-            {/* OWNER VIEW: Private Seller Strategy & Controls */}
-            {isOwner && (
+            {/* ADMIN VIEW: Supervisor Oversight */}
+            {user?.role === 'ADMIN' ? (
+              <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 space-y-3">
+                <div className="flex items-center gap-2 text-indigo-900 font-bold text-sm">
+                  <ShieldCheck className="w-5 h-5 text-indigo-600 shrink-0" />
+                  <span>Platform Oversight Mode</span>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  You are viewing this listing with administrative oversight privileges. As an administrator, your role is platform moderation, deal auditing, and user governance.
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <Link
+                    to="/admin"
+                    className="text-xs font-semibold px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition-all"
+                  >
+                    Admin Portal
+                  </Link>
+                  <button
+                    onClick={handleDelete}
+                    className="text-xs font-semibold px-3 py-2 bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-1.5"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Moderate / Remove Product</span>
+                  </button>
+                </div>
+              </div>
+            ) : isOwner ? (
+              /* OWNER VIEW: Private Seller Strategy & Controls */
               <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900">
@@ -222,10 +265,8 @@ export const ProductDetailsPage = () => {
                   </button>
                 </div>
               </div>
-            )}
-
-            {/* BUYER VIEW: Start Negotiation Action */}
-            {!isOwner && (
+            ) : (
+              /* BUYER VIEW: Start Negotiation Action */
               <div className="space-y-3">
                 {!isAvailable ? (
                   <div className="p-3.5 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-slate-600 flex items-center gap-2">
@@ -295,6 +336,31 @@ export const ProductDetailsPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Verified Seller Reviews Preview */}
+              {sellerReviews.length > 0 && (
+                <div className="mt-4 pt-3 border-t border-slate-100 space-y-2">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                    Verified Buyer Reviews ({sellerReviews.length})
+                  </span>
+                  <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
+                    {sellerReviews.slice(0, 3).map((r) => (
+                      <div key={r._id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-slate-800 text-[11px]">
+                            {r.reviewer?.name || 'Verified Buyer'}
+                          </span>
+                          <div className="flex items-center gap-0.5 text-amber-500 font-bold text-[10px]">
+                            <Star className="w-3 h-3 fill-amber-400" />
+                            <span>{r.rating}.0</span>
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-slate-600 italic">"{r.comment}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

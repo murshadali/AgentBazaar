@@ -455,6 +455,29 @@ export const NegotiationLivePage = () => {
               </div>
             )
           )}
+
+          {/* Terminated / No Agreement Banner */}
+          {(negotiation.status === 'TERMINATED' || negotiation.status === 'FAILED') && (
+            <div className="mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+                <div>
+                  <h4 className="text-sm font-bold text-amber-950">
+                    Negotiation Concluded (No Agreement)
+                  </h4>
+                  <p className="text-xs text-amber-800">
+                    The session reached the round limit. The buyer's maximum budget ceiling could not bridge the gap to the seller's minimum floor price. Neither party's private budget limits were compromised.
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/marketplace"
+                className="bg-white border border-amber-300 text-amber-900 hover:bg-amber-100 font-semibold px-4 py-2 rounded-xl text-xs shrink-0 transition-colors"
+              >
+                Browse Marketplace →
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Right: Convergence Ladder & Confidential Constraints */}
