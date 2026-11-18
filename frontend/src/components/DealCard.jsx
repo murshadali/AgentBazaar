@@ -292,7 +292,9 @@ export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
                   <MapPin className="w-4 h-4 text-indigo-600 mt-0.5 shrink-0" />
                   <div>
                     <span className="text-[10px] text-slate-400 block font-semibold">Pickup Location</span>
-                    <span className="font-bold text-slate-900">{deal.handover?.location || 'Coordinate with seller'}</span>
+                    <span className="font-bold text-slate-900">
+                      {deal.handover?.location || deal.productId?.location || deal.product?.location || deal.sellerId?.city || deal.seller?.city || 'Coordinate with seller'}
+                    </span>
                   </div>
                 </div>
 

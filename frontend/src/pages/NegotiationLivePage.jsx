@@ -493,7 +493,7 @@ export const NegotiationLivePage = () => {
           <div className="bg-white border border-slate-200 rounded-3xl p-5 text-xs space-y-3 shadow-xs">
             <div className="flex items-center gap-1.5 text-slate-900 font-bold uppercase tracking-wider text-[11px] pb-2 border-b border-slate-100">
               <ShieldCheck className="w-4 h-4 text-indigo-600" />
-              <span>Your Private Parameters (Confidential)</span>
+              <span>Your Private Parameters</span>
             </div>
 
             {userRole === 'buyer' && negotiation.buyerConfigCopy && (

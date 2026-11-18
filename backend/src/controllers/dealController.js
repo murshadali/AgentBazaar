@@ -48,23 +48,32 @@ export const getUserDeals = async (req, res, next) => {
 
     const masked = deals.map((d) => maskDealPrivacy(d, req.user._id));
 
-    // Attach hasUserReviewed flag to each deal
+    // Attach handover details and hasUserReviewed flag to each deal
     const dealIds = deals.map((d) => d._id);
-    const userReviews = await Review.find({
-      dealId: { $in: dealIds },
-      reviewerId: req.user._id
-    }).select('dealId');
-    const reviewedDealIds = new Set(userReviews.map((r) => String(r.dealId)));
+    const [userReviews, handovers] = await Promise.all([
+      Review.find({ dealId: { $in: dealIds }, reviewerId: req.user._id }).select('dealId'),
+      Handover.find({ dealId: { $in: dealIds } })
+    ]);
 
-    const dealsWithReviewFlag = masked.map((d) => ({
-      ...d,
-      hasUserReviewed: reviewedDealIds.has(String(d._id))
-    }));
+    const reviewedDealIds = new Set(userReviews.map((r) => String(r.dealId)));
+    const handoverMap = {};
+    handovers.forEach((h) => {
+      handoverMap[String(h.dealId)] = h;
+    });
+
+    const dealsWithDetails = masked.map((d) => {
+      const dealHandover = handoverMap[String(d._id)] || null;
+      return {
+        ...d,
+        handover: dealHandover,
+        hasUserReviewed: reviewedDealIds.has(String(d._id))
+      };
+    });
 
     res.json({
       success: true,
-      count: dealsWithReviewFlag.length,
-      deals: dealsWithReviewFlag
+      count: dealsWithDetails.length,
+      deals: dealsWithDetails
     });
   } catch (error) {
     next(error);
@@ -200,7 +209,7 @@ export const approveDeal = async (req, res, next) => {
         await Handover.create({
           dealId: deal._id,
           location: product?.location || '',
-          timeWindow: 'To be coordinated (e.g. 5:00 PM - 7:00 PM)',
+          timeWindow: 'Flexible',
           contactNumber: seller?.phone || ''
         });
       }

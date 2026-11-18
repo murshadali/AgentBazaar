@@ -65,7 +65,7 @@ export const generateAgentDecision = async ({
     ? buildBuyerAgentPrompt({ product, buyerConfig: privateConfig, currentRound, maxRounds, offerHistory })
     : buildSellerAgentPrompt({ product, sellerConfig: privateConfig, currentRound, maxRounds, offerHistory });
 
-  const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const modelName = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
   const maxRetries = 2;
   let lastError = null;
 
@@ -86,6 +86,7 @@ export const generateAgentDecision = async ({
 
       const result = await model.generateContent(prompt);
       const text = result?.response?.text();
+      console.log(`[AI Engine] Successfully generated real Gemini API response for ${actor} in round ${currentRound}`);
       const parsedAction = parseGeminiResponse(text);
 
       // Programmatic Guardrail Verification

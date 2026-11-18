@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentBazaar — Project Presentation (10 Slides)</title>
+  <style>
+    :root {
+      --indigo: #4f46e5;
+      --indigo-dark: #3730a3;
+      --indigo-light: #eef2ff;
+      --indigo-border: #c7d2fe;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-light: #fff1f2;
+      --rose-border: #fecdd3;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #0b1120;
+      color: var(--slate-900);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      user-select: none;
+    }
+
+    /* Top Control Toolbar */
+    .toolbar {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: #e2e8f0;
+      font-size: 13px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: var(--indigo);
+      color: #fff;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #334155;
+      border-color: #64748b;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--indigo);
+      border-color: var(--indigo);
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+    }
+
+    /* Slide Viewport (16:9 Aspect Ratio) */
+    .deck-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--slate-50);
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 28px 42px 24px;
+      background: var(--slate-50);
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 6px solid var(--indigo);
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    /* Dark Cover Slide */
+    .slide.cover {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #fff;
+      border-top: none;
+      border-left: 14px solid var(--indigo);
+      padding: 46px 56px 36px;
+    }
+
+    .slide-header {
+      border-bottom: 1px solid var(--slate-200);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--indigo-light);
+      color: var(--indigo);
+      border: 1px solid var(--indigo-border);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .slide-title {
+      font-size: 27px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .slide-subtitle {
+      font-size: 13px;
+      color: var(--slate-500);
+      margin-top: 4px;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .slide-footer {
+      border-top: 1px solid var(--slate-200);
+      padding-top: 8px;
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--slate-500);
+    }
+
+    .slide-num {
+      font-weight: 700;
+      color: var(--indigo);
+    }
+
+    /* Grid & Cards */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .grid-split { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 18px; }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .card-indigo { background: var(--indigo-light); border-color: var(--indigo-border); }
+    .card-emerald { background: var(--emerald-light); border-color: var(--emerald-border); }
+    .card-amber { background: var(--amber-light); border-color: var(--amber-border); }
+    .card-rose { background: var(--rose-light); border-color: var(--rose-border); }
+    .card-dark { background: var(--slate-900); border-color: var(--slate-700); color: #f8fafc; }
+
+    .card h3 {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--slate-900);
+    }
+
+    .card-dark h3 { color: #fff; }
+
+    .mono-box {
+      background: var(--slate-900);
+      color: #e0e7ff;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      color: var(--slate-700);
+    }
+
+    .list li {
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .list li::before {
+      content: "•";
+      color: var(--indigo);
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--slate-200);
+    }
+
+    th {
+      background: var(--indigo);
+      color: #fff;
+      text-align: left;
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--slate-200);
+      color: var(--slate-700);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .pill-emerald { background: var(--emerald-light); color: var(--emerald); border: 1px solid var(--emerald-border); }
+    .pill-indigo { background: var(--indigo-light); color: var(--indigo); border: 1px solid var(--indigo-border); }
+    .pill-rose { background: var(--rose-light); color: var(--rose); border: 1px solid var(--rose-border); }
+    .pill-amber { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+
+    /* Progress Dots */
+    .dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .dot {
+      width: 28px;
+      height: 6px;
+      border-radius: 999px;
+      background: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dot.active {
+      background: #818cf8;
+      width: 44px;
+    }
+
+    /* ZOPA Visual Bars */
+    .zopa-track {
+      position: relative;
+      height: 54px;
+      background: var(--slate-100);
+      border-radius: 10px;
+      margin: 10px 0;
+      border: 1px solid var(--slate-200);
+    }
+
+    .zopa-bar {
+      position: absolute;
+      height: 12px;
+      border-radius: 999px;
+    }
+
+    .zopa-overlap {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .toolbar, .dots { display: none !important; }
+      .deck-wrapper {
+        max-width: none;
+        aspect-ratio: auto;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .slide {
+        display: flex !important;
+        width: 100vw;
+        height: 100vh;
+        page-break-after: always;
+        break-after: page;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Controls -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span class="brand-badge">AgentBazaar PPT Deck</span>
+      <span id="slideCounter">Slide 1 of 10</span>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+      <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+    </div>
+  </div>
+
+  <!-- 16:9 Slide Container -->
+  <div class="deck-wrapper" id="deck">
+
+    <!-- ================= SLIDE 1 ================= -->
+    <section class="slide cover active">
+      <div>
+        <span style="display:inline-block; background:#3730a3; color:#c7d2fe; border:1px solid #4f46e5; padding:6px 14px; border-radius:999px; font-size:11px; font-weight:800; letter-spacing:0.08em;">
+          MCA PROJECT PRESENTATION
+        </span>
+        <h1 style="font-size:56px; font-weight:900; margin-top:20px; letter-spacing:-0.03em;">
+          Agent<span style="color:#818cf8;">Bazaar</span>
+        </h1>
+        <p style="font-size:24px; font-weight:700; color:#e2e8f0; margin-top:6px;">
+          Autonomous AI-Powered Peer-to-Peer Negotiation Marketplace
+        </p>
+        <p style="font-size:14px; color:#94a3b8; margin-top:12px;">
+          Privacy-Preserving Multi-Agent Price Negotiation &nbsp;•&nbsp; Boulware / Linear / Conceder Math Curves &nbsp;•&nbsp; Axelrod Tit-for-Tat &nbsp;•&nbsp; Dual Human Approval
+        </p>
+      </div>
+
+      <div class="grid-4" style="margin-top:24px;">
+        <div class="card card-dark">
+          <div style="font-size:10px; font-weight:800; color:#818cf8; margin-bottom:6px;">HYBRID AI ENGINE</div>
+          <div style="font-size:15px; font-weight:800; margin-bottom:4px;">Gemini 1.5 Flash + Fallback</div>
+          <div style="font-size:11.5px; color:#94a3b8;">LLM persuasion paired with deterministic concession math</div>
+        </div>
+        <div class="card card-dark">
+          <div style="font-size:10px; font-weight:800; color:#818cf8; margin-bottom:6px;">GAME THEORY</div>
+          <div style="font-size:15px; font-weight:800; margin-bottom:4px;">ZOPA &amp; Tit-for-Tat</div>
+          <div style="font-size:11.5px; color:#94a3b8;">Reciprocal concession matching &amp; freeze defense</div>
+        </div>
+        <div class="card card-dark">
+          <div style="font-size:10px; font-weight:800; color:#818cf8; margin-bottom:6px;">REAL-TIME SYNC</div>
+          <div style="font-size:15px; font-weight:800; margin-bottom:4px;">Socket.IO 4.8 Events</div>
+          <div style="font-size:11.5px; color:#94a3b8;">Live round-by-round agent streaming &amp; room state</div>
+        </div>
+        <div class="card card-dark">
+          <div style="font-size:10px; font-weight:800; color:#818cf8; margin-bottom:6px;">SAFETY &amp; TRUST</div>
+          <div style="font-size:15px; font-weight:800; margin-bottom:4px;">6-Layer Guardrails</div>
+          <div style="font-size:11.5px; color:#94a3b8;">Strict budget ceiling/floor bounds + dual approval</div>
+        </div>
+      </div>
+
+      <div style="background:#1e1b4b; border:1px solid #4f46e5; border-radius:12px; padding:12px 18px; text-align:center; font-size:12.5px; font-weight:700; color:#e0e7ff;">
+        TECH STACK: React 18 (Vite + Tailwind CSS) &nbsp;|&nbsp; Node.js + Express 4 &nbsp;|&nbsp; Socket.IO &nbsp;|&nbsp; MongoDB Atlas &nbsp;|&nbsp; Google Gemini API &nbsp;|&nbsp; Cloudinary
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 2 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Motivation &amp; Solution</span>
+        <div class="slide-title">Problem Statement &amp; The AgentBazaar Approach</div>
+        <div class="slide-subtitle">Eliminating manual P2P bargaining friction while preserving complete price confidentiality.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2" style="height:100%;">
+          <div class="card" style="border-color:var(--rose-border); display:flex; flex-direction:column; gap:10px;">
+            <div style="background:var(--rose-light); color:var(--rose); padding:8px 12px; border-radius:8px; font-weight:800; font-size:14px;">
+              Challenges in Traditional Platforms (OLX / Quikr)
+            </div>
+            <div class="card" style="background:var(--slate-50); padding:11px;">
+              <strong style="font-size:12.5px;">1. Uncomfortable Haggle &amp; Lowball Spam</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:3px;">Buyers open with 40-50% unrealistically low offers, tiring out genuine sellers.</p>
+            </div>
+            <div class="card" style="background:var(--slate-50); padding:11px;">
+              <strong style="font-size:12.5px;">2. Slow Asynchronous Chat Replies</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:3px;">Back-and-forth messaging drags out over hours or days across dead threads.</p>
+            </div>
+            <div class="card" style="background:var(--slate-50); padding:11px;">
+              <strong style="font-size:12.5px;">3. Information Asymmetry &amp; Regret</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:3px;">Revealing budget or urgency early weakens negotiation leverage.</p>
+            </div>
+            <div class="card" style="background:var(--slate-50); padding:11px;">
+              <strong style="font-size:12.5px;">4. Premature Phone &amp; Location Exposure</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:3px;">Contact numbers are leaked before both parties are committed to a deal.</p>
+            </div>
+          </div>
+
+          <div class="card" style="border-color:var(--indigo-border); display:flex; flex-direction:column; gap:10px;">
+            <div style="background:var(--indigo-light); color:var(--indigo); padding:8px 12px; border-radius:8px; font-weight:800; font-size:14px;">
+              The AgentBazaar Solution
+            </div>
+            <div class="card card-indigo" style="padding:11px;">
+              <strong style="font-size:12.5px; color:var(--indigo-dark);">1. Dual Autonomous AI Agents</strong>
+              <p style="font-size:11.5px; color:var(--slate-700); margin-top:3px;">Buyer AI &amp; Seller AI conduct structured multi-round negotiation in seconds over Socket.IO.</p>
+            </div>
+            <div class="card card-indigo" style="padding:11px;">
+              <strong style="font-size:12.5px; color:var(--indigo-dark);">2. Strict Private Limit Isolation</strong>
+              <p style="font-size:11.5px; color:var(--slate-700); margin-top:3px;">Buyer ceiling (P<sub>max</sub>) and Seller floor (P<sub>floor</sub>) never cross prompt or API boundaries.</p>
+            </div>
+            <div class="card card-indigo" style="padding:11px;">
+              <strong style="font-size:12.5px; color:var(--indigo-dark);">3. Game-Theoretic Math + 6-Layer Guardrails</strong>
+              <p style="font-size:11.5px; color:var(--slate-700); margin-top:3px;">Boulware/Linear/Conceder pacing, Tit-for-Tat reciprocity &amp; hard limit clamping.</p>
+            </div>
+            <div class="card card-indigo" style="padding:11px;">
+              <strong style="font-size:12.5px; color:var(--indigo-dark);">4. Dual Human Approval &amp; Masked Handover</strong>
+              <p style="font-size:11.5px; color:var(--slate-700); margin-top:3px;">Phone &amp; meetup location unlock only after both Buyer &amp; Seller approve the agreed price.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 2 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Negotiation Core 1</span>
+        <div class="slide-title">Negotiation Architecture &amp; Strict Limit Isolation</div>
+        <div class="slide-subtitle">Isolated private configurations orchestrated turn-by-turn inside negotiationOrchestrator.js.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card" style="border-color:var(--indigo-border);">
+            <div style="background:var(--indigo); color:#fff; padding:8px; border-radius:8px; text-align:center; font-weight:800; font-size:13px; margin-bottom:12px;">
+              BUYER PRIVATE CONFIG
+            </div>
+            <ul class="list">
+              <li><strong>Desired Target (P<sub>target</sub>):</strong> Opening anchor offer in Round 1.</li>
+              <li><strong>Budget Ceiling (P<sub>max</sub>):</strong> Strict max payable price (SECRET).</li>
+              <li><strong>Negotiation Style:</strong> FIRM, BALANCED, or FLEXIBLE.</li>
+              <li><strong>Zero Leakage:</strong> Never passed to Seller prompt or exposed in Seller API response.</li>
+            </ul>
+          </div>
+
+          <div class="card card-dark" style="border-color:var(--indigo); border-width:2px; display:flex; flex-direction:column; gap:10px;">
+            <div style="text-align:center;">
+              <div style="font-size:16px; font-weight:800;">Negotiation Orchestrator</div>
+              <div style="font-size:11px; color:#818cf8; font-family:monospace;">negotiationOrchestrator.js</div>
+            </div>
+            <div style="background:#1e293b; border:1px solid #334155; padding:10px; border-radius:8px; font-size:11.5px; text-align:center;">
+              <strong>1. Snapshot Configs</strong><br/>
+              <span style="color:#94a3b8;">buyerConfigCopy &amp; sellerConfigCopy</span>
+            </div>
+            <div style="background:#1e293b; border:1px solid #334155; padding:10px; border-radius:8px; font-size:11.5px; text-align:center;">
+              <strong>2. Alternate Turn Loop</strong><br/>
+              <span style="color:#94a3b8;">Buyer → Seller → Buyer (up to maxRounds)</span>
+            </div>
+            <div style="background:#3730a3; border:1px solid #4f46e5; padding:10px; border-radius:8px; font-size:11.5px; text-align:center;">
+              <strong>3. Socket.IO Broadcast</strong><br/>
+              <span style="color:#e0e7ff;">agent_thinking &amp; negotiation:offer</span>
+            </div>
+          </div>
+
+          <div class="card" style="border-color:var(--emerald-border);">
+            <div style="background:var(--emerald); color:#fff; padding:8px; border-radius:8px; text-align:center; font-weight:800; font-size:13px; margin-bottom:12px;">
+              SELLER PRIVATE CONFIG
+            </div>
+            <ul class="list">
+              <li><strong>Opening Ask (P<sub>open</sub>):</strong> Listed price or opening counter-ask.</li>
+              <li><strong>Private Floor (P<sub>floor</sub>):</strong> Minimum acceptable price (SECRET).</li>
+              <li><strong>Style &amp; Max Rounds (R<sub>max</sub>):</strong> Default 5 rounds (System max 10).</li>
+              <li><strong>Zero Leakage:</strong> Never passed to Buyer prompt or exposed in Buyer API response.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-indigo">
+          <h3 style="color:var(--indigo-dark); font-size:13.5px; margin-bottom:6px;">Privacy Isolation Guarantees in Code</h3>
+          <ul class="list" style="gap:5px; font-size:12px;">
+            <li><strong>Separate Prompt Builders:</strong> <code>buildBuyerAgentPrompt()</code> receives only <code>buyerConfig</code>; <code>buildSellerAgentPrompt()</code> receives only <code>sellerConfig</code>.</li>
+            <li><strong>Shared Memory Is Public Only:</strong> Both agents only observe public <code>Offer</code> history <code>{ round, actor, action, price, message }</code>.</li>
+            <li><strong>API Response Stripping:</strong> <code>negotiationController</code> masks counterparty private configs from both REST payloads and Socket.IO broadcasts.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 3 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Negotiation Core 2</span>
+        <div class="slide-title">Zone of Possible Agreement (ZOPA) &amp; Boundary Safety</div>
+        <div class="slide-subtitle">Distinguishing feasible bargaining overlap from unbridgeable gaps while strictly protecting private limits.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="card" style="border-color:var(--emerald-border);">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="color:var(--emerald); margin:0;">Case A: Positive ZOPA (Buyer Max P<sub>max</sub> &ge; Seller Floor P<sub>floor</sub>)</h3>
+            <span class="pill pill-emerald">CONVERGENCE GUARANTEED</span>
+          </div>
+          <div class="zopa-track">
+            <div class="zopa-bar" style="left:8%; width:52%; top:13px; background:var(--indigo);"></div>
+            <div class="zopa-bar" style="left:36%; width:56%; bottom:13px; background:var(--emerald);"></div>
+            <div class="zopa-overlap" style="left:36%; width:24%; background:rgba(5,150,105,0.16); border:1.5px dashed var(--emerald); color:var(--emerald);">
+              ZOPA: ₹30,000 – ₹32,000
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--slate-700); font-weight:700;">
+            <span style="color:var(--indigo);">Buyer Target: ₹27,500</span>
+            <span style="color:var(--emerald);">Seller Floor: ₹30,000</span>
+            <span style="color:var(--indigo);">Buyer Ceiling: ₹32,000</span>
+            <span style="color:var(--emerald);">Seller Ask: ₹35,000</span>
+          </div>
+          <p style="font-size:12px; color:var(--slate-600); margin-top:8px;">
+            Any price inside <strong>[₹30,000, ₹32,000]</strong> yields mutual surplus. Tit-for-Tat concessions guide offers into this overlap and trigger <code>ACCEPT</code>.
+          </p>
+        </div>
+
+        <div class="card" style="border-color:var(--amber-border);">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="color:var(--amber); margin:0;">Case B: Negative ZOPA (Buyer Max P<sub>max</sub> &lt; Seller Floor P<sub>floor</sub>)</h3>
+            <span class="pill pill-rose">LIMIT PROTECTION ACTIVATED</span>
+          </div>
+          <div class="zopa-track">
+            <div class="zopa-bar" style="left:8%; width:18%; top:21px; background:var(--indigo);"></div>
+            <div class="zopa-overlap" style="left:27%; width:42%; background:rgba(225,29,72,0.12); border:1.5px dashed var(--rose); color:var(--rose);">
+              NO OVERLAP (Unbridgeable Gap: ₹26,698)
+            </div>
+            <div class="zopa-bar" style="left:70%; width:22%; top:21px; background:var(--emerald);"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--slate-700); font-weight:700;">
+            <span style="color:var(--indigo);">Buyer Ceiling: ₹3,302</span>
+            <span style="color:var(--emerald);">Seller Floor: ₹30,000 &nbsp;|&nbsp; Opening Ask: ₹35,000</span>
+          </div>
+          <p style="font-size:12px; color:var(--slate-600); margin-top:8px;">
+            <strong>Real Case Protection:</strong> Once Buyer hits ₹3,302 ceiling &amp; Seller hits ₹30,000 floor, agents explicitly state their boundary and conclude with <strong>No Agreement (FAILED)</strong>—zero budget or floor violation possible.
+          </p>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 4 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 5 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Negotiation Core 3</span>
+        <div class="slide-title">Mathematical Concession Curves (Boulware, Linear &amp; Conceder)</div>
+        <div class="slide-subtitle">Time-normalized polynomial curves defined in concessionConfig.js &amp; concessionService.js.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-split" style="align-items:stretch;">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="card" style="border-color:var(--indigo-border);">
+              <h3 style="color:var(--indigo-dark);">Polynomial Baseline Formulas</h3>
+              <div class="mono-box">
+                t = (r - 1) / (R_max - 1) &nbsp;&isin;&nbsp; [0, 1]<br/>
+                &phi;(t) = t<sup>&beta;</sup><br/><br/>
+                B<sub>base</sub>(r) = P<sub>target</sub> + (P<sub>max</sub> - P<sub>target</sub>) &middot; t<sup>&beta;</sup><br/>
+                S<sub>base</sub>(r) = P<sub>open</sub> &nbsp; - (P<sub>open</sub> - P<sub>floor</sub>) &middot; t<sup>&beta;</sup>
+              </div>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Style</th>
+                  <th>Curve Type</th>
+                  <th>&beta;</th>
+                  <th>Bargaining Behavior</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color:var(--rose);">FIRM</strong></td>
+                  <td>Boulware (&beta; &gt; 1)</td>
+                  <td><strong>2.20</strong></td>
+                  <td>Protects target early; yields mainly near final round</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--indigo);">BALANCED</strong></td>
+                  <td>Linear (&beta; = 1)</td>
+                  <td><strong>1.00</strong></td>
+                  <td>Steady equal concession steps per round</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--emerald);">FLEXIBLE</strong></td>
+                  <td>Conceder (&beta; &lt; 1)</td>
+                  <td><strong>0.45</strong></td>
+                  <td>Rapid early concessions for fast deal closure</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <h3>Concession % Used Across 5 Rounds (&phi;(t) = t<sup>&beta;</sup>)</h3>
+            <svg viewBox="0 0 460 270" style="width:100%; height:auto;">
+              <!-- Grid -->
+              <line x1="50" y1="220" x2="430" y2="220" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="50" y1="20" x2="50" y2="220" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="50" y1="170" x2="430" y2="170" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="50" y1="120" x2="430" y2="120" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="50" y1="70" x2="430" y2="70" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="50" y1="20" x2="430" y2="20" stroke="#e2e8f0" stroke-dasharray="4"/>
+
+              <!-- Y labels -->
+              <text x="42" y="224" text-anchor="end" font-size="10" fill="#64748b">0%</text>
+              <text x="42" y="174" text-anchor="end" font-size="10" fill="#64748b">25%</text>
+              <text x="42" y="124" text-anchor="end" font-size="10" fill="#64748b">50%</text>
+              <text x="42" y="74" text-anchor="end" font-size="10" fill="#64748b">75%</text>
+              <text x="42" y="24" text-anchor="end" font-size="10" fill="#64748b">100%</text>
+
+              <!-- X labels (x = 50, 145, 240, 335, 430) -->
+              <text x="50" y="238" text-anchor="middle" font-size="10" fill="#475569">R1 (t=0)</text>
+              <text x="145" y="238" text-anchor="middle" font-size="10" fill="#475569">R2 (0.25)</text>
+              <text x="240" y="238" text-anchor="middle" font-size="10" fill="#475569">R3 (0.50)</text>
+              <text x="335" y="238" text-anchor="middle" font-size="10" fill="#475569">R4 (0.75)</text>
+              <text x="430" y="238" text-anchor="middle" font-size="10" fill="#475569">R5 (1.0)</text>
+
+              <!-- FLEXIBLE (0, 53.6, 73.2, 87.9, 100) => y = 220 - val*2 -->
+              <polyline fill="none" stroke="#059669" stroke-width="3" points="50,220 145,112.8 240,73.6 335,44.2 430,20"/>
+              <!-- BALANCED (0, 25, 50, 75, 100) -->
+              <polyline fill="none" stroke="#4f46e5" stroke-width="3" points="50,220 145,170 240,120 335,70 430,20"/>
+              <!-- FIRM (0, 4.7, 21.8, 53.1, 100) -->
+              <polyline fill="none" stroke="#e11d48" stroke-width="3" points="50,220 145,210.6 240,176.4 335,113.8 430,20"/>
+
+              <!-- Markers -->
+              <circle cx="50" cy="220" r="4" fill="#0f172a"/>
+              <circle cx="145" cy="112.8" r="4" fill="#059669"/>
+              <circle cx="240" cy="73.6" r="4" fill="#059669"/>
+              <circle cx="335" cy="44.2" r="4" fill="#059669"/>
+              <circle cx="145" cy="170" r="4" fill="#4f46e5"/>
+              <circle cx="240" cy="120" r="4" fill="#4f46e5"/>
+              <circle cx="335" cy="70" r="4" fill="#4f46e5"/>
+              <circle cx="145" cy="210.6" r="4" fill="#e11d48"/>
+              <circle cx="240" cy="176.4" r="4" fill="#e11d48"/>
+              <circle cx="335" cy="113.8" r="4" fill="#e11d48"/>
+              <circle cx="430" cy="20" r="4.5" fill="#0f172a"/>
+
+              <!-- Legend -->
+              <rect x="75" y="250" width="12" height="4" fill="#059669"/><text x="92" y="255" font-size="10" fill="#334155">FLEXIBLE (&beta;=0.45)</text>
+              <rect x="200" y="250" width="12" height="4" fill="#4f46e5"/><text x="217" y="255" font-size="10" fill="#334155">BALANCED (&beta;=1.0)</text>
+              <rect x="325" y="250" width="12" height="4" fill="#e11d48"/><text x="342" y="255" font-size="10" fill="#334155">FIRM (&beta;=2.2)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 5 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 6 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Negotiation Core 4</span>
+        <div class="slide-title">Axelrod's Reciprocal Tit-for-Tat &amp; Condition Elasticity</div>
+        <div class="slide-subtitle">Responsive counter-moves that reward opponent good faith, resist stonewalling, and price item condition.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="card" style="border-color:var(--indigo-border);">
+              <h3 style="color:var(--indigo-dark);">1. Reciprocal Tit-for-Tat Adaptation</h3>
+              <div class="mono-box" style="margin-bottom:10px;">
+                IF &Delta;P<sub>opp</sub> &gt; 0: &Delta;<sub>recip</sub> = round(&Delta;P<sub>opp</sub> &times; M<sub>style</sub> &times; 0.5)<br/>
+                Price = clamp(Baseline &plusmn; &Delta;<sub>recip</sub>, [Min, Max])
+              </div>
+              <ul class="list">
+                <li><strong>Proportional Match Multiplier (M<sub>style</sub>):</strong> <code>FIRM: 0.70&times;</code>, <code>BALANCED: 1.00&times;</code>, <code>FLEXIBLE: 1.25&times;</code>.</li>
+                <li><strong>Concession Freeze Defense:</strong> If opponent makes &Delta;P<sub>opp</sub> = 0 concession in intermediate rounds, agent applies a freeze penalty (<code>-10%</code> buyer / <code>-8%</code> seller range).</li>
+              </ul>
+            </div>
+
+            <div class="card card-emerald">
+              <h3 style="color:var(--emerald);">2. Near-Gap Auto-Convergence Gate</h3>
+              <ul class="list">
+                <li>When opponent's ask/offer is strictly within bounds AND <code>(Offers Crossed || Final Round || Gap &le; max(₹800, 3%))</code>, the engine returns <code>ACCEPT</code> immediately.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="card">
+              <h3>3. Item Condition Discount Elasticity</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Condition</th>
+                    <th>Factor</th>
+                    <th>Bargaining Effect</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>New</strong></td><td>0.80&times;</td><td>Seller discount attenuated (0.85&times;); strong anchor defense</td></tr>
+                  <tr><td><strong>Like New</strong></td><td>0.90&times;</td><td>High resale value retention; smaller counter steps</td></tr>
+                  <tr><td><strong>Good</strong></td><td>1.00&times;</td><td>Standard market resale baseline</td></tr>
+                  <tr><td><strong>Fair</strong></td><td>1.15&times;</td><td>Noticeable wear justifies firmer buyer discount</td></tr>
+                  <tr><td><strong>Used</strong></td><td>1.25&times;</td><td>Heavy wear; higher discount flexibility expected</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card card-indigo">
+              <h3 style="color:var(--indigo-dark);">Boundary Messaging Accuracy</h3>
+              <p style="font-size:12px; color:var(--slate-700); line-height:1.45;">
+                Once an agent hits its hard ceiling (<code>P<sub>max</sub></code>) or floor (<code>P<sub>floor</sub></code>), dialogue explicitly states the absolute limit instead of misleadingly repeating "raising/reducing offer".
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 6 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 7 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Negotiation Core 5</span>
+        <div class="slide-title">Hybrid AI Engine (Gemini 1.5 Flash + 6-Layer Guardrails)</div>
+        <div class="slide-subtitle">Zero-trust execution pipeline combining LLM persuasion with deterministic safety checks.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-indigo">
+            <h3 style="color:var(--indigo-dark);">1. Gemini 1.5 Flash</h3>
+            <p style="font-size:11px; font-family:monospace; color:var(--slate-500); margin-bottom:8px;">geminiClient.js</p>
+            <ul class="list" style="font-size:11.5px;">
+              <li>Isolated JSON prompt (temp 0.2)</li>
+              <li>Up to 2 retries with backoff</li>
+              <li>Persuasive, human-like reasoning</li>
+            </ul>
+          </div>
+          <div class="card card-amber">
+            <h3 style="color:var(--amber);">2. Deterministic Fallback</h3>
+            <p style="font-size:11px; font-family:monospace; color:var(--slate-500); margin-bottom:8px;">concessionService.js</p>
+            <ul class="list" style="font-size:11.5px;">
+              <li>Runs if API fails or mock mode set</li>
+              <li>Tit-for-Tat + Polynomial t<sup>&beta;</sup> math</li>
+              <li>Guarantees 100% session uptime</li>
+            </ul>
+          </div>
+          <div class="card card-emerald">
+            <h3 style="color:var(--emerald);">3. Programmatic Guardrail</h3>
+            <p style="font-size:11px; font-family:monospace; color:var(--slate-500); margin-bottom:8px;">guardrailService.js</p>
+            <ul class="list" style="font-size:11.5px;">
+              <li>Intercepts EVERY move pre-DB save</li>
+              <li>Logs flags in <code>guardrailCorrected</code></li>
+              <li>Streams verified offer via Socket.IO</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:14px; font-weight:800; margin-bottom:10px;">The 6-Layer Programmatic Verification Pipeline</h3>
+          <div class="grid-3">
+            <div class="card" style="padding:12px;">
+              <strong style="color:var(--indigo); font-size:12.5px;">Layer 1: Action Whitelist</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:4px;">Allows only <code>OFFER</code>, <code>ACCEPT</code>, <code>REJECT</code>; substitutes rule-based move on invalid output.</p>
+            </div>
+            <div class="card" style="padding:12px;">
+              <strong style="color:var(--indigo); font-size:12.5px;">Layer 2: Hard Limit Clamping</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:4px;">Buyer clamped &le; <code>P<sub>max</sub></code>; Seller clamped &ge; <code>P<sub>floor</sub></code>; blocks out-of-bounds <code>ACCEPT</code>.</p>
+            </div>
+            <div class="card" style="padding:12px;">
+              <strong style="color:var(--indigo); font-size:12.5px;">Layer 3: Monotonic Direction</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:4px;">Prevents backtracking: Buyer offers cannot decrease; Seller asks cannot increase.</p>
+            </div>
+            <div class="card" style="padding:12px;">
+              <strong style="color:var(--indigo); font-size:12.5px;">Layer 4: Crossing Auto-Accept</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:4px;">Converts to <code>ACCEPT</code> whenever Buyer Offer &ge; Seller Ask within private bounds.</p>
+            </div>
+            <div class="card" style="padding:12px;">
+              <strong style="color:var(--indigo); font-size:12.5px;">Layer 5: Turn &amp; Round Policy</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:4px;">Turn 1 must be Buyer <code>OFFER</code>/<code>REJECT</code>; enforces <code>currentRound &le; maxRounds</code>.</p>
+            </div>
+            <div class="card" style="padding:12px;">
+              <strong style="color:var(--indigo); font-size:12.5px;">Layer 6: Limit Leak Redaction</strong>
+              <p style="font-size:11.5px; color:var(--slate-600); margin-top:4px;">Detects and redacts any message containing exact confidential ceiling or floor numbers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 7 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 8 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Live Case Study</span>
+        <div class="slide-title">Round-by-Round Price Convergence Walkthrough</div>
+        <div class="slide-subtitle">Canon EOS 200D II DSLR Camera (Listed ₹35,000, Like New) — Converged Agreement in 4 Rounds.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2" style="gap:12px;">
+          <div class="card card-indigo" style="padding:10px 14px; font-size:12px; font-weight:700; color:var(--indigo-dark);">
+            BUYER CONFIG: Target ₹27,500 &nbsp;|&nbsp; Secret Ceiling ₹32,000 &nbsp;|&nbsp; BALANCED
+          </div>
+          <div class="card card-emerald" style="padding:10px 14px; font-size:12px; font-weight:700; color:var(--emerald);">
+            SELLER CONFIG: Opening ₹35,000 &nbsp;|&nbsp; Secret Floor ₹30,000 &nbsp;|&nbsp; BALANCED
+          </div>
+        </div>
+
+        <div class="grid-split" style="align-items:stretch;">
+          <div style="display:flex; flex-direction:column; gap:12px; justify-content:space-between;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Round</th>
+                  <th>Buyer AI</th>
+                  <th>Seller AI</th>
+                  <th>Spread / Event</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Round 1</strong></td><td>₹27,500 (OFFER)</td><td>₹35,000 (OFFER)</td><td>Gap ₹7,500 (Anchors)</td></tr>
+                <tr><td><strong>Round 2</strong></td><td>₹29,100 (OFFER)</td><td>₹33,300 (OFFER)</td><td>Gap ₹4,200 (Tit-for-Tat)</td></tr>
+                <tr><td><strong>Round 3</strong></td><td>₹30,450 (OFFER)</td><td>₹31,800 (OFFER)</td><td>Gap ₹1,350 (Inside ZOPA)</td></tr>
+                <tr style="background:var(--emerald-light);">
+                  <td><strong style="color:var(--emerald);">Round 4</strong></td>
+                  <td><strong style="color:var(--indigo);">₹31,400 (OFFER)</strong></td>
+                  <td><strong style="color:var(--emerald);">₹31,400 (ACCEPT)</strong></td>
+                  <td><strong style="color:var(--emerald);">CONVERGED</strong></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="card" style="border-color:var(--emerald-border);">
+              <h3 style="color:var(--emerald);">Mutual Surplus Achieved at ₹31,400</h3>
+              <ul class="list">
+                <li><strong>Buyer Savings:</strong> Saved ₹3,600 off listing price (₹600 under budget ceiling).</li>
+                <li><strong>Seller Gain:</strong> Earned +₹1,400 above secret minimum floor price.</li>
+                <li><strong>Handover Trigger:</strong> Deal enters <code>PENDING_APPROVAL</code> for both human sign-offs.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <h3>Price Convergence Ladder (₹)</h3>
+            <svg viewBox="0 0 430 245" style="width:100%; height:auto;">
+              <!-- Axes -->
+              <line x1="60" y1="205" x2="400" y2="205" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="60" y1="20" x2="60" y2="205" stroke="#94a3b8" stroke-width="1.5"/>
+              <line x1="60" y1="168" x2="400" y2="168" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="60" y1="131" x2="400" y2="131" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="60" y1="94" x2="400" y2="94" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="60" y1="57" x2="400" y2="57" stroke="#e2e8f0" stroke-dasharray="4"/>
+              <line x1="60" y1="20" x2="400" y2="20" stroke="#e2e8f0" stroke-dasharray="4"/>
+
+              <!-- Y Scale: 26k (205) to 36k (20) => 18.5px per 1000 -->
+              <text x="52" y="208" text-anchor="end" font-size="10" fill="#64748b">₹26k</text>
+              <text x="52" y="171" text-anchor="end" font-size="10" fill="#64748b">₹28k</text>
+              <text x="52" y="134" text-anchor="end" font-size="10" fill="#64748b">₹30k</text>
+              <text x="52" y="97" text-anchor="end" font-size="10" fill="#64748b">₹32k</text>
+              <text x="52" y="60" text-anchor="end" font-size="10" fill="#64748b">₹34k</text>
+              <text x="52" y="23" text-anchor="end" font-size="10" fill="#64748b">₹36k</text>
+
+              <!-- ZOPA shading 30k (131) to 32k (94) -->
+              <rect x="60" y="94" width="340" height="37" fill="rgba(5,150,105,0.08)"/>
+              <text x="394" y="116" text-anchor="end" font-size="9.5" fill="#059669" font-weight="700">ZOPA Band (₹30k–₹32k)</text>
+
+              <!-- X Labels: x = 80, 180, 280, 380 -->
+              <text x="80" y="222" text-anchor="middle" font-size="10.5" fill="#475569">Round 1</text>
+              <text x="180" y="222" text-anchor="middle" font-size="10.5" fill="#475569">Round 2</text>
+              <text x="280" y="222" text-anchor="middle" font-size="10.5" fill="#475569">Round 3</text>
+              <text x="380" y="222" text-anchor="middle" font-size="10.5" fill="#059669" font-weight="700">R4 (Agreed)</text>
+
+              <!-- Seller: 35000(38.5), 33300(69.95), 31800(97.7), 31400(105.1) -->
+              <polyline fill="none" stroke="#059669" stroke-width="3" points="80,38.5 180,70 280,97.7 380,105.1"/>
+              <!-- Buyer: 27500(177.25), 29100(147.65), 30450(122.7), 31400(105.1) -->
+              <polyline fill="none" stroke="#4f46e5" stroke-width="3" points="80,177.3 180,147.7 280,122.7 380,105.1"/>
+
+              <circle cx="80" cy="38.5" r="4.5" fill="#059669"/>
+              <circle cx="180" cy="70" r="4.5" fill="#059669"/>
+              <circle cx="280" cy="97.7" r="4.5" fill="#059669"/>
+              <circle cx="80" cy="177.3" r="4.5" fill="#4f46e5"/>
+              <circle cx="180" cy="147.7" r="4.5" fill="#4f46e5"/>
+              <circle cx="280" cy="122.7" r="4.5" fill="#4f46e5"/>
+              <circle cx="380" cy="105.1" r="6" fill="#059669" stroke="#fff" stroke-width="2"/>
+
+              <text x="380" y="92" text-anchor="end" font-size="10" font-weight="800" fill="#0f172a">₹31,400 ACCEPT</text>
+              <rect x="95" y="233" width="12" height="4" fill="#059669"/><text x="112" y="238" font-size="10" fill="#334155">Seller Ask</text>
+              <rect x="215" y="233" width="12" height="4" fill="#4f46e5"/><text x="232" y="238" font-size="10" fill="#334155">Buyer Offer</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 8 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 9 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Post-Negotiation Workflow</span>
+        <div class="slide-title">Dual Human Approval, Privacy Handover &amp; Reputation</div>
+        <div class="slide-subtitle">Human-in-the-loop verification from agreed proposal to offline handover and trust scoring.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card" style="border-color:var(--indigo-border); display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <span class="pill pill-indigo" style="background:var(--indigo); color:#fff; border:none;">STEP 1</span>
+              <h3 style="margin-top:8px;">Dual Human Approval Gate</h3>
+              <div style="background:var(--slate-100); padding:6px; border-radius:6px; font-family:monospace; font-size:10.5px; color:var(--indigo); font-weight:700; text-align:center;">
+                PENDING_APPROVAL &rarr; CONFIRMED
+              </div>
+            </div>
+            <ul class="list">
+              <li>Agents cannot auto-transfer funds or bind transactions silently.</li>
+              <li>Listing status automatically locks to <code>RESERVED</code> upon deal creation.</li>
+              <li>Both Buyer &amp; Seller must explicitly click <strong>Approve</strong> within 48 hours.</li>
+              <li>Declining immediately releases product back to <code>ACTIVE</code>.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-color:var(--emerald-border); display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <span class="pill pill-emerald" style="background:var(--emerald); color:#fff; border:none;">STEP 2</span>
+              <h3 style="margin-top:8px;">Privacy-Protected Handover</h3>
+              <div style="background:var(--slate-100); padding:6px; border-radius:6px; font-family:monospace; font-size:10.5px; color:var(--emerald); font-weight:700; text-align:center;">
+                CONFIRMED &rarr; COMPLETED
+              </div>
+            </div>
+            <ul class="list">
+              <li>Phone numbers &amp; meetup location stay masked until dual confirmation.</li>
+              <li>Once <code>CONFIRMED</code>, contact info &amp; time window unlock safely.</li>
+              <li>Users meet in person, inspect item, and pay via Cash / UPI directly.</li>
+              <li>Marking handover complete sets Deal <code>COMPLETED</code> &amp; Product <code>SOLD</code>.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-color:var(--amber-border); display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <span class="pill pill-amber" style="background:var(--amber); color:#fff; border:none;">STEP 3</span>
+              <h3 style="margin-top:8px;">Reputation &amp; Review Moderation</h3>
+              <div style="background:var(--slate-100); padding:6px; border-radius:6px; font-family:monospace; font-size:10.5px; color:var(--amber); font-weight:700; text-align:center;">
+                POST-COMPLETION TRUST
+              </div>
+            </div>
+            <ul class="list">
+              <li>Only verified participants of a <code>COMPLETED</code> deal can submit 1–5 star ratings.</li>
+              <li>Dynamically recalculates <code>averageRating</code> &amp; <code>totalReviews</code> on User profile.</li>
+              <li>Verified buyer reviews display cleanly on Seller info inside Product Details.</li>
+              <li>Users can <strong>Flag</strong> abusive or fake reviews for Admin resolution.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 9 / 10</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 10 ================= -->
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Architecture &amp; Governance</span>
+        <div class="slide-title">Full-Stack Architecture, Admin Portal &amp; Conclusion</div>
+        <div class="slide-subtitle">Cloud-deployed MERN architecture with dedicated role-separated administrative supervision.</div>
+      </div>
+
+      <div class="slide-body">
+        <div class="card card-dark" style="border-color:var(--indigo);">
+          <div style="font-size:12px; font-weight:800; color:#c7d2fe; margin-bottom:10px;">END-TO-END PRODUCTION STACK (VERCEL + RENDER + ATLAS + CLOUDINARY)</div>
+          <div class="grid-4" style="text-align:center;">
+            <div style="background:#1e293b; border:1px solid var(--indigo); border-radius:10px; padding:10px;">
+              <strong style="font-size:12.5px; color:#fff;">React 18 Client</strong><br/>
+              <span style="font-size:11px; color:#94a3b8;">Vite + Tailwind CSS + Socket.IO Client</span>
+            </div>
+            <div style="background:#1e293b; border:1px solid var(--indigo); border-radius:10px; padding:10px;">
+              <strong style="font-size:12.5px; color:#fff;">Express 4 + WS</strong><br/>
+              <span style="font-size:11px; color:#94a3b8;">JWT Auth + REST API + Socket.IO Rooms</span>
+            </div>
+            <div style="background:#1e293b; border:1px solid var(--indigo); border-radius:10px; padding:10px;">
+              <strong style="font-size:12.5px; color:#fff;">Negotiation Core</strong><br/>
+              <span style="font-size:11px; color:#94a3b8;">Gemini 1.5 Flash + Tit-for-Tat + 6 Guardrails</span>
+            </div>
+            <div style="background:#1e293b; border:1px solid var(--indigo); border-radius:10px; padding:10px;">
+              <strong style="font-size:12.5px; color:#fff;">Data &amp; Media</strong><br/>
+              <span style="font-size:11px; color:#94a3b8;">MongoDB Atlas Cloud + Cloudinary CDN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card" style="border-color:var(--indigo-border);">
+            <h3 style="color:var(--indigo-dark);">Role-Separated Admin Portal (/admin)</h3>
+            <ul class="list">
+              <li><strong>Strict Role Isolation:</strong> Admin cannot make buyer offers or personal deals; sees Oversight Mode on products.</li>
+              <li><strong>Real-Time Metrics:</strong> Users, Active Listings, Running Negotiations, Completed Deals &amp; Settled Volume (₹).</li>
+              <li><strong>Operational Moderation:</strong> Suspend/Reactivate users, remove listings, audit Deal Handovers, and Dismiss/Delete flagged reviews.</li>
+            </ul>
+          </div>
+
+          <div class="card card-emerald">
+            <h3 style="color:var(--emerald);">Conclusion &amp; Key Achievements</h3>
+            <ul class="list">
+              <li>Automates tedious P2P bargaining while mathematically guaranteeing zero budget/floor limit breaches.</li>
+              <li>Hybrid LLM + deterministic fallback delivers natural conversation with 100% uptime reliability.</li>
+              <li>Full-stack production build with real-time WebSockets, Cloudinary images, and MongoDB Atlas persistence.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>AgentBazaar &nbsp;|&nbsp; Autonomous Multi-Agent P2P Negotiation Marketplace</span>
+        <span class="slide-num">Slide 10 / 10</span>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Slide Indicator Dots -->
+  <div class="dots" id="dots"></div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dotsContainer = document.getElementById('dots');
+    const counter = document.getElementById('slideCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (idx === 0 ? ' active' : '');
+      dot.onclick = () => goToSlide(idx);
+      dotsContainer.appendChild(dot);
+    });
+
+    function goToSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      slides[current].classList.remove('active');
+      dotsContainer.children[current].classList.remove('active');
+      current = index;
+      slides[current].classList.add('active');
+      dotsContainer.children[current].classList.add('active');
+      counter.textContent = `Slide ${current + 1} of ${slides.length}`;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+    }
+
+    function changeSlide(delta) {
+      goToSlide(current + delta);
+    }
+
+    function toggleFullscreen() {
+      const el = document.getElementById('deck');
+      if (!document.fullscreenElement) {
+        el.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        changeSlide(-1);
+      }
+    });
+
+    goToSlide(0);
+  </script>
+</body>
+</html>

@@ -127,21 +127,14 @@ export const NegotiationModal = ({ product, isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Warning or Privacy Note */}
-        {isOwner ? (
+        {/* Warning Note if Owner */}
+        {isOwner && (
           <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2.5 mb-4">
             <Lock className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
             <div>
               <p className="font-bold text-amber-900">You own this listing.</p>
               <p className="mt-0.5 text-amber-700">A seller cannot negotiate against their own product listing.</p>
             </div>
-          </div>
-        ) : (
-          <div className="bg-indigo-50/70 border border-indigo-200 rounded-2xl p-3 mb-4 flex items-start gap-2.5">
-            <Shield className="w-4 h-4 text-indigo-600 mt-0.5 shrink-0" />
-            <p className="text-xs text-indigo-900 leading-relaxed">
-              <span className="font-bold text-indigo-950">Confidential Limits:</span> Your Maximum Budget is strictly protected. The seller agent never sees your ceiling, and your agent will never exceed it.
-            </p>
           </div>
         )}
 

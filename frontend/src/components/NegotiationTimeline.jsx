@@ -58,7 +58,7 @@ export const NegotiationTimeline = ({ offers = [], agreedPrice, maxRounds = 5, s
           </span>
           <div>
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-              Real-World Convergence Chart
+              Convergence Chart
             </h3>
             <p className="text-[10px] text-slate-400">Axelrod Reciprocal Tit-for-Tat Trajectory</p>
           </div>
@@ -236,12 +236,6 @@ export const NegotiationTimeline = ({ offers = [], agreedPrice, maxRounds = 5, s
             </p>
           </div>
         )}
-      </div>
-
-      {/* Real-World Safety Notice */}
-      <div className="pt-2 border-t border-slate-100 flex items-center gap-2 text-[11px] text-slate-500">
-        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-        <span>Strict Limit Isolation: Neither party's private budget was leaked.</span>
       </div>
     </div>
   );

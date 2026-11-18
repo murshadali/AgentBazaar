@@ -14,7 +14,6 @@ import {
   Trash2,
   Sliders,
   Star,
-  DollarSign,
   MapPin,
   Eye,
   X,
@@ -250,8 +249,8 @@ export const AdminPage = () => {
         {/* ================= TAB 1: OVERVIEW ================= */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            {/* 5 Core Metric Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* 4 Core Metric Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
                 <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-indigo-600" />
@@ -295,17 +294,6 @@ export const AdminPage = () => {
                 <p className="text-[11px] text-slate-400 mt-1">
                   {stats?.confirmedDeals || 0} confirmed / {stats?.pendingDealApprovals || 0} pending
                 </p>
-              </div>
-
-              <div className="col-span-2 lg:col-span-1 bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
-                <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1.5">
-                  <DollarSign className="w-4 h-4 text-emerald-600" />
-                  <span>Total Volume</span>
-                </div>
-                <div className="text-2xl font-black text-emerald-700">
-                  ₹{Number(stats?.totalTransactionVolume || 0).toLocaleString('en-IN')}
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1">Settled transaction value</p>
               </div>
             </div>
 
@@ -727,14 +715,20 @@ export const AdminPage = () => {
                         <div className="text-[10px] text-slate-400">{d.seller?.email}</div>
                       </td>
                       <td className="py-3 px-4 text-slate-600 text-[11px]">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`px-1.5 py-0.5 rounded font-bold ${d.buyerApproval?.approved ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
-                            Buyer: {d.buyerApproval?.approved ? 'Approved' : 'Pending'}
-                          </span>
-                          <span className={`px-1.5 py-0.5 rounded font-bold ${d.sellerApproval?.approved ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
-                            Seller: {d.sellerApproval?.approved ? 'Approved' : 'Pending'}
-                          </span>
-                        </div>
+                        {(() => {
+                          const isBuyerAppr = d.buyerApproval?.status === 'APPROVED' || d.buyerApproval?.approved === true || d.status === 'CONFIRMED' || d.status === 'COMPLETED';
+                          const isSellerAppr = d.sellerApproval?.status === 'APPROVED' || d.sellerApproval?.approved === true || d.status === 'CONFIRMED' || d.status === 'COMPLETED';
+                          return (
+                            <div className="flex items-center gap-1.5">
+                              <span className={`px-1.5 py-0.5 rounded font-bold ${isBuyerAppr ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
+                                Buyer: {isBuyerAppr ? 'Approved' : 'Pending'}
+                              </span>
+                              <span className={`px-1.5 py-0.5 rounded font-bold ${isSellerAppr ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
+                                Seller: {isSellerAppr ? 'Approved' : 'Pending'}
+                              </span>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="py-3 px-4">
                         <span
@@ -879,28 +873,39 @@ export const AdminPage = () => {
                 </div>
 
                 {/* Handover Details */}
-                <div className="p-3.5 rounded-2xl border border-slate-200 space-y-2">
-                  <span className="font-bold text-slate-800 flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-indigo-600" />
-                    <span>Physical Handover Details</span>
-                  </span>
-                  {inspectingDeal.handoverDetails ? (
-                    <div className="space-y-1 text-slate-600 text-[11px]">
-                      <p>Location: <strong className="text-slate-800">{inspectingDeal.handoverDetails.location || inspectingDeal.handoverDetails.meetingLocation || 'To be decided'}</strong></p>
-                      <p>Scheduled: <strong className="text-slate-800">{inspectingDeal.handoverDetails.scheduledDate ? new Date(inspectingDeal.handoverDetails.scheduledDate).toLocaleString() : 'Not scheduled'}</strong></p>
-                      <p>Status: <strong className="text-indigo-700 uppercase">{inspectingDeal.handoverDetails.status || 'Pending Verification'}</strong></p>
+                {(() => {
+                  const handoverInfo = inspectingDeal.handover || inspectingDeal.handoverDetails;
+                  return (
+                    <div className="p-3.5 rounded-2xl border border-slate-200 space-y-2">
+                      <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-indigo-600" />
+                        <span>Physical Handover Details</span>
+                      </span>
+                      {handoverInfo ? (
+                        <div className="space-y-1 text-slate-600 text-[11px]">
+                          <p>Location: <strong className="text-slate-800">{handoverInfo.location || handoverInfo.meetingLocation || inspectingDeal.product?.location || 'Flexible (In-person)'}</strong></p>
+                          <p>Meeting Time: <strong className="text-slate-800">{handoverInfo.timeWindow || (handoverInfo.scheduledDate ? new Date(handoverInfo.scheduledDate).toLocaleString() : 'Flexible')}</strong></p>
+                          <p>Contact Phone: <strong className="text-indigo-700 font-mono">{handoverInfo.contactNumber || inspectingDeal.seller?.phone || inspectingDeal.buyer?.phone || 'Provided upon deal confirmation'}</strong></p>
+                        </div>
+                      ) : (
+                        <p className="text-slate-500 text-[11px]">Handover coordination pending buyer/seller scheduling.</p>
+                      )}
                     </div>
-                  ) : (
-                    <p className="text-slate-500 text-[11px]">Handover coordination pending buyer/seller scheduling.</p>
-                  )}
-                </div>
+                  );
+                })()}
 
                 {/* Approvals */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px]">
-                  <span>Buyer Approved: <strong>{inspectingDeal.buyerApproval?.approved ? 'Yes' : 'No'}</strong></span>
-                  <span>Seller Approved: <strong>{inspectingDeal.sellerApproval?.approved ? 'Yes' : 'No'}</strong></span>
-                  <span>Deal Status: <strong className="text-indigo-600 uppercase">{inspectingDeal.status}</strong></span>
-                </div>
+                {(() => {
+                  const isBuyerAppr = inspectingDeal.buyerApproval?.status === 'APPROVED' || inspectingDeal.buyerApproval?.approved === true || inspectingDeal.status === 'CONFIRMED' || inspectingDeal.status === 'COMPLETED';
+                  const isSellerAppr = inspectingDeal.sellerApproval?.status === 'APPROVED' || inspectingDeal.sellerApproval?.approved === true || inspectingDeal.status === 'CONFIRMED' || inspectingDeal.status === 'COMPLETED';
+                  return (
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px]">
+                      <span>Buyer Approved: <strong className={isBuyerAppr ? 'text-emerald-700' : 'text-slate-700'}>{isBuyerAppr ? 'Yes' : 'No'}</strong></span>
+                      <span>Seller Approved: <strong className={isSellerAppr ? 'text-emerald-700' : 'text-slate-700'}>{isSellerAppr ? 'Yes' : 'No'}</strong></span>
+                      <span>Deal Status: <strong className="text-indigo-600 uppercase">{inspectingDeal.status}</strong></span>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="pt-2 flex justify-end">

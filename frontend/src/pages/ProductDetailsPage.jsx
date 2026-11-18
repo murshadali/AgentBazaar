@@ -309,12 +309,8 @@ export const ProductDetailsPage = () => {
                 Seller Information & Reputation
               </h4>
               <div className="flex items-start gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-base font-bold text-indigo-700">
-                  {sellerInfo.photo ? (
-                    <img src={sellerInfo.photo} alt={sellerInfo.name} className="w-full h-full object-cover" />
-                  ) : (
-                    sellerInfo.name?.charAt(0) || 'S'
-                  )}
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 shrink-0 flex items-center justify-center text-lg font-bold text-indigo-700 shadow-xs">
+                  {sellerInfo.name?.charAt(0)?.toUpperCase() || 'S'}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
