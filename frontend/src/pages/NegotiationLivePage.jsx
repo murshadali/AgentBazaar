@@ -31,6 +31,8 @@ export const NegotiationLivePage = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [thinkingState, setThinkingState] = useState(null);
   const [error, setError] = useState('');
+  const [showDeclineModal, setShowDeclineModal] = useState(false);
+  const [declineReason, setDeclineReason] = useState('');
 
   const chatContainerRef = useRef(null);
 
@@ -167,7 +169,7 @@ export const NegotiationLivePage = () => {
     }
   };
 
-  const handleRejectDeal = async () => {
+  const handleRejectDeal = () => {
     const deal = typeof negotiation.dealId === 'object' && negotiation.dealId !== null ? negotiation.dealId : negotiation.deal;
     const dealId = deal?._id || (typeof negotiation.dealId === 'string' ? negotiation.dealId : null);
 
@@ -176,12 +178,25 @@ export const NegotiationLivePage = () => {
       return;
     }
 
-    const reason = prompt('Please enter a reason for declining this deal proposal:');
-    if (reason === null) return;
+    setDeclineReason('');
+    setShowDeclineModal(true);
+  };
+
+  const handleConfirmDecline = async (e) => {
+    e.preventDefault();
+    const deal = typeof negotiation.dealId === 'object' && negotiation.dealId !== null ? negotiation.dealId : negotiation.deal;
+    const dealId = deal?._id || (typeof negotiation.dealId === 'string' ? negotiation.dealId : null);
+
+    if (!dealId) {
+      navigate('/deals');
+      return;
+    }
 
     setActionLoading(true);
     try {
-      await api.post(`/deals/${dealId}/reject`, { reason });
+      await api.post(`/deals/${dealId}/reject`, { reason: declineReason.trim() });
+      setShowDeclineModal(false);
+      setDeclineReason('');
       await fetchNegotiation();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to decline deal proposal');
@@ -514,6 +529,43 @@ export const NegotiationLivePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Minimal Decline Offer Popup */}
+      {showDeclineModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <form
+            onSubmit={handleConfirmDecline}
+            className="bg-white rounded-2xl max-w-sm w-full border border-slate-200 shadow-xl p-5 space-y-3 text-xs"
+          >
+            <h3 className="font-bold text-slate-900 text-sm">Decline Deal Proposal</h3>
+            <input
+              type="text"
+              value={declineReason}
+              onChange={(e) => setDeclineReason(e.target.value)}
+              placeholder="Enter reason for declining..."
+              autoFocus
+              className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
+            />
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setShowDeclineModal(false)}
+                disabled={actionLoading}
+                className="px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold transition-colors"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                disabled={actionLoading}
+                className="bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white px-4 py-2 rounded-xl font-semibold transition-colors"
+              >
+                {actionLoading ? 'Processing...' : 'Decline'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

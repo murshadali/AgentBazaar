@@ -17,6 +17,8 @@ import api from '../services/api';
 export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
   const [loading, setLoading] = useState(false);
   const [editingHandover, setEditingHandover] = useState(false);
+  const [reasonModalMode, setReasonModalMode] = useState(null); // null | 'reject' | 'cancel'
+  const [reasonInput, setReasonInput] = useState('');
   const [handoverForm, setHandoverForm] = useState({
     location: deal.handover?.location || '',
     timeWindow: deal.handover?.timeWindow || '',
@@ -54,31 +56,28 @@ export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
     }
   };
 
-  const handleReject = async () => {
-    const reason = prompt('Please enter a reason for declining this deal proposal:');
-    if (reason === null) return;
-
-    setLoading(true);
-    try {
-      await api.post(`/deals/${deal._id}/reject`, { reason });
-      if (onUpdated) onUpdated();
-    } catch (err) {
-      alert(err.response?.data?.message || 'Failed to decline deal');
-    } finally {
-      setLoading(false);
-    }
+  const handleReject = () => {
+    setReasonInput('');
+    setReasonModalMode('reject');
   };
 
-  const handleCancel = async () => {
-    const reason = prompt('Please enter a reason for cancelling this confirmed deal:');
-    if (reason === null) return;
+  const handleCancel = () => {
+    setReasonInput('');
+    setReasonModalMode('cancel');
+  };
+
+  const handleConfirmReasonSubmit = async (e) => {
+    e.preventDefault();
+    const endpoint = reasonModalMode === 'reject' ? `/deals/${deal._id}/reject` : `/deals/${deal._id}/cancel`;
 
     setLoading(true);
     try {
-      await api.post(`/deals/${deal._id}/cancel`, { reason });
+      await api.post(endpoint, { reason: reasonInput.trim() });
+      setReasonModalMode(null);
+      setReasonInput('');
       if (onUpdated) onUpdated();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to cancel deal');
+      alert(err.response?.data?.message || `Failed to ${reasonModalMode} deal`);
     } finally {
       setLoading(false);
     }
@@ -380,6 +379,49 @@ export const DealCard = ({ deal, currentUserId, onUpdated, onReviewClick }) => {
         <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs">
           <strong>{deal.status === 'REJECTED' ? 'Proposal Declined' : 'Deal Cancelled'}:</strong>{' '}
           {deal.cancellationReason || deal.rejectionReason || 'Transaction concluded without final agreement.'}
+        </div>
+      )}
+
+      {/* Minimal Decline / Cancel Reason Popup */}
+      {reasonModalMode && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <form
+            onSubmit={handleConfirmReasonSubmit}
+            className="bg-white rounded-2xl max-w-sm w-full border border-slate-200 shadow-xl p-5 space-y-3 text-xs"
+          >
+            <h3 className="font-bold text-slate-900 text-sm">
+              {reasonModalMode === 'reject' ? 'Decline Deal Proposal' : 'Cancel Confirmed Deal'}
+            </h3>
+            <input
+              type="text"
+              value={reasonInput}
+              onChange={(e) => setReasonInput(e.target.value)}
+              placeholder="Enter reason..."
+              autoFocus
+              className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
+            />
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setReasonModalMode(null)}
+                disabled={loading}
+                className="px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold transition-colors"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white px-4 py-2 rounded-xl font-semibold transition-colors"
+              >
+                {loading
+                  ? 'Processing...'
+                  : reasonModalMode === 'reject'
+                  ? 'Decline'
+                  : 'Confirm Cancel'}
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </div>
